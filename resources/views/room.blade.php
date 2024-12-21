@@ -1,6 +1,6 @@
 <x-app-layout>
 
-    <div style="max-width: 1920px; max-height: 1080px; margin: 0 auto; overflow: hidden; position: relative;">
+    <div x-data="{ popBar: true }" style="max-width: 1920px; max-height: 1080px; margin: 0 auto; overflow: hidden; position: relative;">
         {{-- Header --}}
         <div style="width: 100%; position: absolute; height: 5rem; background-color: #ffffff; top: 0; left: 0; padding: 1rem 6rem; display: flex; gap: 6rem; justify-content: space-between; align-items: center;">
 
@@ -57,7 +57,7 @@
                         </div>
                         <div style="display: flex; gap: 2rem; align-items: center;">
                             <button style="background-color: #ebeef3; padding: 1rem 1.5rem; border-radius: 0.5rem; color: #354052; border:none; font-size: 1.25rem; font-weight: 600;">Cek Tanggal</button>
-                            <button style="background-color: #550000; padding: 1rem 1.5rem; border-radius: 0.5rem; color: white; border:none; font-size: 1.25rem; font-weight: 600;">Reservasi Sekarang</button>
+                            <button @click="popBar = true" style="background-color: #550000; padding: 1rem 1.5rem; border-radius: 0.5rem; color: white; border:none; font-size: 1.25rem; font-weight: 600;">Reservasi Sekarang</button>
                         </div>
                     </div>
                 </div>
@@ -69,6 +69,35 @@
                 <h6 style="margin-top: -0.1rem; text-align: center; color: white;">© 2024 UniShare</h6>
             </div>
 
+        </div>
+
+        {{-- PopUp Bar --}}
+        <div
+        x-show="popBar"
+        x-transition:enter="transition ease-out duration-900 transform"
+        x-transition:enter-start="translate-y-full opacity-0"
+        x-transition:enter-end="translate-y-0 opacity-100"
+        x-transition:leave="transition ease-in duration-900 transform"
+        x-transition:leave-start="translate-y-0 opacity-100"
+        x-transition:leave-end="translate-y-full opacity-0"
+        style="z-index: 20; height: 968px; width: 100%; position: absolute; bottom: 0; overflow-y: auto; background-color: #fff; box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2); border-radius: 1rem; transition: all 0.8s ease;">
+            <div style="margin: 0 auto; width: 1496px; display: flex; gap: 4rem; margin-top: 2rem;">
+                <div style="width: 100%;">
+                    <div style="width: 100%; display: flex; justify-content: space-between;">
+                        <h2 style="font-weight: 700">Pilih Waktu</h2>
+                        <button @click="popBar = false" style="background-color: #ebeef3b2; padding: 0.5rem 1rem; border-radius: 0.5rem; color: #354052c2; border:none; font-size: 1.2rem; font-weight: 600;">Kembali</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- Backdrop -->
+        <div
+            x-show="popBar"
+            x-transition:enter="transition ease-out duration-500"
+            x-transition:leave="transition ease-in duration-500"
+            style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: rgba(0, 0, 0, 0.5); z-index: 10; backdrop-filter: blur(2px);"
+            @click="popBar = false">
         </div>
     </div>
 
