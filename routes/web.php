@@ -7,7 +7,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/home', function () {
-    return view('admin.verif-reservation');
+    return view('room');
     // return view('home');
 });
 Route::get('/after-auth', function () {
