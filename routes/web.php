@@ -7,7 +7,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/home', function () {
-    return view('home');
+    return view('admin.verif-reservation');
+    // return view('home');
 });
 Route::get('/after-auth', function () {
     return view('after-auth');
@@ -41,7 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('admin')->name('admin.')->group(function() {
         Route::get('/verif-reservation', function () {
             return view('room');
-        })->name('verif_reservation');
+        })->name('admin.verif-reservation');
     });
 });
 
