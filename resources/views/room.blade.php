@@ -21,7 +21,7 @@
                         placeholder="Cari gedung atau kelas">
                 </div>
                 <div style="display: flex; gap: 4rem;">
-                    <a href="{{ route('user.landing') }}">
+                    <a href="{{ route('landing') }}">
                         <button
                             style="text-align: center; border: none; background-color: transparent; font-weight: 600; color: #484848;">
                             Beranda
@@ -205,7 +205,7 @@
                                     <div style="flex: 1; overflow: hidden;">
                                         <h6
                                             style="font-size: 1.125rem; font-weight: bold; color: #333; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">
-                                            Audiotorium Lt 16 - TULT
+                                            {{ $room->name }} - {{ $room->building->name }}
                                         </h6>
                                         <p style="margin: 0.5rem 0 0; font-size: 0.875rem; color: #666;">Kapasitas: 100
                                             Orang</p>
