@@ -56,14 +56,13 @@ class ReservationController extends Controller
                 'endDate' => $request->endDateTime,
                 'file_proposal' => $request->file('proposal')->store('file_proposals'),
                 'duration' => $duration . ' Jam',
-                'status' => 'Pending',
+                'status' => 'pending',
             ]);
 
             DB::commit();
 
-            return redirect()->route('user.landing')->with('success', "Berhasil membuat reservasi!");
+            return redirect()->route('landing')->with('success', "Berhasil membuat reservasi!");
         } catch (Exception $e) {
-            dd($e);
             DB::rollBack();
             session()->flash('openModal', true);
             return redirect()->back()->withInput()->with('error', "Gagal membuat reservasi! Silakan coba lagi.");

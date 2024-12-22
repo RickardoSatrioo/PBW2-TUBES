@@ -16,6 +16,7 @@ return new class extends Migration
             $table->text('about')->nullable();
             $table->string('faculty')->nullable();
             $table->string('major')->nullable();
+            $table->string('avatar')->nullable();
             $table->timestamp('birthDate')->nullable();
         });
     }

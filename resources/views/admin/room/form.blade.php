@@ -177,19 +177,9 @@
             <div
                 style="width: 240px; padding: 8rem 1rem; color: #ffffff; background-color: #550000; display: flex; flex-direction: column; gap: 2.25rem;">
                 <div style="border-bottom: 2px solid #fff;">
-                    <a href="{{ route('admin.admin.verif-reservation') }}">
-                        <p
+                    <p
                         style="font-weight: 600; font-size: 1.25rem; text-align: center; margin-bottom: 0.1rem !important; ">
                         Verifikasi Pesanan</p>
-                    </a>
-                </div>
-
-                <div style="border-bottom: 2px solid #fff;">
-                    <a href="{{ route('admin.room.index') }}">
-                        <p
-                        style="font-weight: 600; font-size: 1.25rem; text-align: center; margin-bottom: 0.1rem !important; ">
-                        Room</p>
-                    </a>
                 </div>
                 {{-- <div style="border-bottom: 2px solid #fff;">
                     <p style="font-weight: 600; font-size: 1.25rem; text-align: center; margin-bottom: 0.1rem !important; ">
@@ -200,50 +190,103 @@
             {{-- Main Content --}}
             <div x-data="{ openTab: 1 }" style="flex-grow: 1; padding: 8rem 3rem 0 2rem; background-color: #ffffff;">
 
-                <p style="font-weight: 800; font-size: 2.25rem;">Verifikasi Pemesanan Ruangan</p>
-                <!-- Tab buttons -->
-                <div style="display: flex; border-bottom: 2px solid #E8EAEC;">
-                    <button @click="openTab = 1"
-                        :style="openTab === 1 ? 'border: none; border-bottom: 2px solid #484848; color: #484848;' :
-                            'border: none; border-bottom: 2px solid #ccc; color: #333;'"
-                        style="padding: 10px 20px; cursor: pointer; transition: all 0.3s ease;">
-                        <p style="font-weight: 600; font-size: 1.25rem; margin: 10px 20px; color: #484848;">Belum
-                            disetujui</p>
-                    </button>
-                    <button @click="openTab = 2"
-                        :style="openTab === 2 ? 'border: none; border-bottom: 2px solid #484848; color: #484848;' :
-                            'border: none; border-bottom: 2px solid #ccc; color: #333;'"
-                        style="padding: 10px 20px; cursor: pointer; transition: all 0.3s ease;" id="selesaiButton"
-                        disabled>
-                        <p style="font-weight: 600; font-size: 1.25rem;  margin: 10px 20px;">Selesai</p>
-                    </button>
+                <div class="mb-3 d-flex justify-content-between">
+                    <h1>{{ $title }}</h1>
                 </div>
 
-                <!-- Tab content -->
-                <div x-show="openTab === 1"
-                    style="margin: 20px 0; padding-right: 1rem; display: none; height: 74vh; overflow-y: auto; overflow-x: hidden;"
-                    x-cloak>
-                    <!-- Table for Tab 1 -->
-                    <table id="pendingTable">
-                        <thead>
-                            <tr>
-                                <th></th> <!-- Empty column header -->
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-                <div x-show="openTab === 2"
-                    style="margin: 20px 0; padding-right: 1rem; display: none; height: 74vh; overflow-y: auto; overflow-x: hidden;"
-                    x-cloak>
+                <form action="{{ $route }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @if ($method === 'PUT')
+                        @method('PUT')
+                    @endif
 
-                    <table id="approvedTable">
-                        <thead>
-                            <tr>
-                                <th></th> <!-- Empty column header -->
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
+                    <div class="mb-3">
+                        <label for="id_building" class="form-label">Gedung</label>
+                        <select id="id_building" name="id_building" class="form-select" required>
+                            <option value="">Pilih Gedung</option>
+                            @foreach(App\Models\Building::all() as $building)
+                                <option value="{{ $building->id }}" {{ old('id_building', $model->id_building ?? '') == $building->id ? 'selected' : '' }}>
+                                    {{ $building->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('id_building')
+                            <div class="rounded invalid-feedback d-block ps-2" style="background: white; text-align: left">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nama Ruangan</label>
+                        <input type="text" id="name" name="name" class="form-control" value="{{ old('name', $model->name ?? '') }}" required>
+                        @error('name')
+                            <div class="rounded invalid-feedback d-block ps-2" style="background: white; text-align: left">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="capacity" class="form-label">Kapasitas</label>
+                        <input type="number" id="capacity" name="capacity" class="form-control" value="{{ old('capacity', $model->capacity ?? '') }}" required>
+                        @error('capacity')
+                            <div class="rounded invalid-feedback d-block ps-2" style="background: white; text-align: left">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="open" class="form-label">Jam Buka</label>
+                        <input type="time" id="open" name="open" class="form-control" value="{{ old('open', $model->open ?? '') }}" required>
+                        @error('open')
+                            <div class="rounded invalid-feedback d-block ps-2" style="background: white; text-align: left">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="close" class="form-label">Jam Tutup</label>
+                        <input type="time" id="close" name="close" class="form-control" value="{{ old('close', $model->close ?? '') }}" required>
+                        @error('close')
+                            <div class="rounded invalid-feedback d-block ps-2" style="background: white; text-align: left">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="contact_person" class="form-label">Kontak</label>
+                        <input type="text" id="contact_person" name="contact_person" class="form-control" value="{{ old('contact_person', $model->contact_person ?? '') }}">
+                        @error('contact_person')
+                            <div class="rounded invalid-feedback d-block ps-2" style="background: white; text-align: left">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Foto Ruangan</label>
+                        <input type="file" id="image" name="image" class="form-control">
+                        @if(isset($model) && $model->image)
+                            <img src="{{ asset('storage/' . $model->image) }}" alt="Foto Ruangan" width="100" class="mt-2">
+                        @endif
+                        @error('image')
+                        <div class="rounded invalid-feedback d-block ps-2" style="background: white; text-align: left">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">{{ $button }}</button>
+                        <a href="{{ route('admin.room.' . 'index') }}" class="btn btn-secondary">Batal</a>
+                    </div>
+                </form>
+
 
             </div>
         </div>

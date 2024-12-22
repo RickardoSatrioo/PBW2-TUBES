@@ -22,7 +22,9 @@
     <!-- Bagian Proposal -->
     <div class="text-center col-1">
         <h5 class="mb-3" style="color: #5D6065;"><b>Proposal</b></h5>
-        <a href="#" class="text-decoration-none" style="color: #73C2FF;">proposal.pdf</a>
+        <a href="{{ asset('storage/files/proposal.pdf') }}" class="text-decoration-none" style="color: #73C2FF;" target="_blank">
+            proposal.pdf
+        </a>
     </div>
 
     <!-- Bagian Data Pengaju -->

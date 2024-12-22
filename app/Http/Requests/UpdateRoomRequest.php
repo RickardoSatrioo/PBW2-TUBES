@@ -11,7 +11,7 @@ class UpdateRoomRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,6 +22,7 @@ class UpdateRoomRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'id_building' => 'required|exists:building,id', // Validate building ID
             'name' => 'required|string|max:255|unique:room,name,' . $this->id,
             'capacity' => 'required|integer|min:1',
             'open' => 'required|date_format:H:i',

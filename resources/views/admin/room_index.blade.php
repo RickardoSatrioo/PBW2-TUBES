@@ -141,7 +141,7 @@
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <button class="gap-2 btn btn-light d-flex justify-content-center align-items-center">
+                        <button class="btn btn-light d-flex justify-content-center align-items-center gap-2">
                             <div>{{ Auth::user()->name }}</div>
                             <div class="ti ti-user-circle" style="font-size: 3rem;"></div>
                             <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -177,19 +177,9 @@
             <div
                 style="width: 240px; padding: 8rem 1rem; color: #ffffff; background-color: #550000; display: flex; flex-direction: column; gap: 2.25rem;">
                 <div style="border-bottom: 2px solid #fff;">
-                    <a href="{{ route('admin.admin.verif-reservation') }}">
-                        <p
+                    <p
                         style="font-weight: 600; font-size: 1.25rem; text-align: center; margin-bottom: 0.1rem !important; ">
                         Verifikasi Pesanan</p>
-                    </a>
-                </div>
-
-                <div style="border-bottom: 2px solid #fff;">
-                    <a href="{{ route('admin.room.index') }}">
-                        <p
-                        style="font-weight: 600; font-size: 1.25rem; text-align: center; margin-bottom: 0.1rem !important; ">
-                        Room</p>
-                    </a>
                 </div>
                 {{-- <div style="border-bottom: 2px solid #fff;">
                     <p style="font-weight: 600; font-size: 1.25rem; text-align: center; margin-bottom: 0.1rem !important; ">
@@ -200,50 +190,29 @@
             {{-- Main Content --}}
             <div x-data="{ openTab: 1 }" style="flex-grow: 1; padding: 8rem 3rem 0 2rem; background-color: #ffffff;">
 
-                <p style="font-weight: 800; font-size: 2.25rem;">Verifikasi Pemesanan Ruangan</p>
-                <!-- Tab buttons -->
-                <div style="display: flex; border-bottom: 2px solid #E8EAEC;">
-                    <button @click="openTab = 1"
-                        :style="openTab === 1 ? 'border: none; border-bottom: 2px solid #484848; color: #484848;' :
-                            'border: none; border-bottom: 2px solid #ccc; color: #333;'"
-                        style="padding: 10px 20px; cursor: pointer; transition: all 0.3s ease;">
-                        <p style="font-weight: 600; font-size: 1.25rem; margin: 10px 20px; color: #484848;">Belum
-                            disetujui</p>
-                    </button>
-                    <button @click="openTab = 2"
-                        :style="openTab === 2 ? 'border: none; border-bottom: 2px solid #484848; color: #484848;' :
-                            'border: none; border-bottom: 2px solid #ccc; color: #333;'"
-                        style="padding: 10px 20px; cursor: pointer; transition: all 0.3s ease;" id="selesaiButton"
-                        disabled>
-                        <p style="font-weight: 600; font-size: 1.25rem;  margin: 10px 20px;">Selesai</p>
-                    </button>
+                <p style="font-weight: 800; font-size: 2.25rem;">{{ $title }}</p>
+
+                <div class="d-flex justify-content-between mb-3">
+                    <h1>{{ $title }}</h1>
+                    <a href="{{ route($routePrefix . 'create') }}" class="btn btn-success">Tambah Ruangan</a>
                 </div>
 
-                <!-- Tab content -->
-                <div x-show="openTab === 1"
-                    style="margin: 20px 0; padding-right: 1rem; display: none; height: 74vh; overflow-y: auto; overflow-x: hidden;"
-                    x-cloak>
-                    <!-- Table for Tab 1 -->
-                    <table id="pendingTable">
-                        <thead>
-                            <tr>
-                                <th></th> <!-- Empty column header -->
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-                <div x-show="openTab === 2"
-                    style="margin: 20px 0; padding-right: 1rem; display: none; height: 74vh; overflow-y: auto; overflow-x: hidden;"
-                    x-cloak>
+                <table id="room-table" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nama Ruangan</th>
+                            <th>Nama Gedung</th>
+                            <th>Foto</th>
+                            <th>Kapasitas</th>
+                            <th>Waktu Buka</th>
+                            <th>Waktu Tutup</th>
+                            <th>Kontak</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                </table>
 
-                    <table id="approvedTable">
-                        <thead>
-                            <tr>
-                                <th></th> <!-- Empty column header -->
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
 
             </div>
         </div>
