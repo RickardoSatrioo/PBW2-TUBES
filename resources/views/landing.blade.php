@@ -2,7 +2,8 @@
 
     <div style="max-width: 1920px; max-height: 1080px; margin: 0 auto; overflow: hidden; position: relative;">
         {{-- Header --}}
-        <div style="z-index: 10; width: 100%; position: absolute; height: 5rem; backdrop-filter: blur(2px); background-color: #ffffff88; top: 0; left: 0; padding: 1rem 6rem; display: flex; gap: 6rem; justify-content: space-between; align-items: center;">
+        <div
+            style="z-index: 10; width: 100%; position: absolute; height: 5rem; backdrop-filter: blur(2px); background-color: #ffffff88; top: 0; left: 0; padding: 1rem 6rem; display: flex; gap: 6rem; justify-content: space-between; align-items: center;">
 
             {{-- Left Side --}}
             <div>
@@ -60,25 +61,37 @@
             <!-- Landing Page -->
             <div style="width: 100%; height: 100vh; position: relative; overflow: hidden;">
                 <!-- Video Background -->
-                <video autoplay muted loop playsinline style="position: absolute; right: 0; bottom: 0; min-width: 100%; min-height: 100%; width: auto; height: auto; z-index: -1; object-fit: cover; background-image: url('{{ asset('assets/img/background.png') }}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+                <video autoplay muted loop playsinline
+                    style="position: absolute; right: 0; bottom: 0; min-width: 100%; min-height: 100%; width: auto; height: auto; z-index: -1; object-fit: cover; background-image: url('{{ asset('assets/img/background.png') }}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
                     <source src="{{ asset('assets/bg-landing.mp4') }}" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
 
                 <!-- Overlay for better text readability -->
-                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 192px; background: rgba(0, 0, 0, 0.5);"></div>
+                <div
+                    style="position: absolute; top: 0; left: 0; right: 0; bottom: 192px; background: rgba(0, 0, 0, 0.5);">
+                </div>
 
                 <!-- Header Text -->
-                <div style="position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: white; width: 90%;">
-                    <h1 style="font-size: 2.8rem; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); line-height: 1.2;">Ruangan Ideal untuk Setiap Kegiatan di Telkom University</h1>
-                    <p style="font-size: 1.4rem; margin-top: 1.5rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); font-weight: 300;">Wujudkan acara berkualitas di ruang yang tepat</p>
+                <div
+                    style="position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: white; width: 90%;">
+                    <h1
+                        style="font-size: 2.8rem; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); line-height: 1.2;">
+                        Ruangan Ideal untuk Setiap Kegiatan di Telkom University</h1>
+                    <p
+                        style="font-size: 1.4rem; margin-top: 1.5rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); font-weight: 300;">
+                        Wujudkan acara berkualitas di ruang yang tepat</p>
                 </div>
 
                 <!-- Search Bar -->
-                <div style="position: absolute; top: 42%; left: 50%; transform: translate(-50%, -50%); width: 60%; max-width: 800px;">
-                    <div style="background: rgba(255, 255, 255, 0.95); border-radius: 50px; padding: 15px 30px; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-                        <input type="text" placeholder="Cari ruangan yang Anda butuhkan..." style="width: 100%; padding: 12px; border: none; outline: none; font-size: 1.1rem; background: transparent;">
-                        <button class="ti ti-search" style="border: none; padding: 0.8rem; font-size: 1.5rem; border-radius: 50%; background-color: #820000; color: #fff; cursor: pointer; transition: background-color 0.3s ease; min-width: 50px;"></button>
+                <div
+                    style="position: absolute; top: 42%; left: 50%; transform: translate(-50%, -50%); width: 60%; max-width: 800px;">
+                    <div
+                        style="background: rgba(255, 255, 255, 0.95); border-radius: 50px; padding: 15px 30px; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                        <input type="text" placeholder="Cari ruangan yang Anda butuhkan..."
+                            style="width: 100%; padding: 12px; border: none; outline: none; font-size: 1.1rem; background: transparent;">
+                        <button class="ti ti-search"
+                            style="border: none; padding: 0.8rem; font-size: 1.5rem; border-radius: 50%; background-color: #820000; color: #fff; cursor: pointer; transition: background-color 0.3s ease; min-width: 50px;"></button>
                     </div>
                 </div>
             </div>
@@ -108,15 +121,30 @@
 
 
                     <!-- Venue Card 1 -->
-                    @for ($i = 0; $i < 10; $i++)
-                    <div style="min-width: 300px; background: white; border-radius: 0.4rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: transform 0.3s ease;">
-                        <img src="{{ asset('assets/img/background.png') }}" alt="Venue 1" style="width: 100%; height: 200px; object-fit: cover; border-radius: 0.4rem 0.4rem 0 0;">
-                        <div style="padding: 20px;">
-                            <h3 style="margin: 0 0 10px 0; color: #333; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">Grand Ballroom Grand Ballroom Grand Ballroom</h3>
-                            <p style="margin: 0; color: #666;">Capacity: 500 people</p>
+                    @forelse ($rooms as $room)
+                        @php
+                            $imagePath =
+                                $room->image && \Storage::exists('public/' . $room->image)
+                                    ? 'storage/' . $room->image
+                                    : 'assets/img/background.png';
+                        @endphp
+                        <a href="{{ route('user.room', $room->id) }}">
+                            <div
+                            style="min-width: 300px; background: white; border-radius: 0.4rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: transform 0.3s ease;">
+                            <img src="{{ asset($imagePath) }}" alt="Venue 1"
+                                style="width: 100%; height: 200px; object-fit: cover; border-radius: 0.4rem 0.4rem 0 0;">
+                            <div style="padding: 20px;">
+                                <h3
+                                    style="margin: 0 0 10px 0; color: #333; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">
+                                    {{ $room->building->name }} • {{ $room->name }}
+                                </h3>
+                                <p style="margin: 0; color: #666;">Capacity: {{ $room->capacity }} people</p>
+                            </div>
                         </div>
-                    </div>
-                    @endfor
+                        </a>
+                    @empty
+                        <h1>Ruangan masih kosong</h1>
+                    @endforelse
 
                 </div>
             </div>
@@ -125,29 +153,40 @@
             <div style="padding: 30px 20px; background: white;">
                 <h2 style="text-align: center; margin-bottom: 40px; color: #333; font-size: 2.5rem;">About Us</h2>
                 <!-- Card 1 -->
-                <div style="display: flex; margin-bottom: 40px; padding: 0 10rem; overflow: hidden; justify-content: center; align-items: center;">
-                    <img src="{{ asset('assets/img/landing1.png') }}" alt="About 1" style="width: 400px; height: 300px; object-fit: cover;">
+                <div
+                    style="display: flex; margin-bottom: 40px; padding: 0 10rem; overflow: hidden; justify-content: center; align-items: center;">
+                    <img src="{{ asset('assets/img/landing1.png') }}" alt="About 1"
+                        style="width: 400px; height: 300px; object-fit: cover;">
                     <div style="padding: 40px; width: 35rem;">
                         <h2 style="margin: 0 0 20px 0; color: #333;">Pemilihan Ruangan</h2>
-                        <p style="margin: 0; line-height: 1.6; color: #666;">Menyediakan daftar ruangan lengkap dengan deskripsi, kapasitas, dan fasilitas yang tersedia, serta fitur pencarian dan filter untuk menemukan ruangan yang sesuai dengan kebutuhan Anda.</p>
+                        <p style="margin: 0; line-height: 1.6; color: #666;">Menyediakan daftar ruangan lengkap dengan
+                            deskripsi, kapasitas, dan fasilitas yang tersedia, serta fitur pencarian dan filter untuk
+                            menemukan ruangan yang sesuai dengan kebutuhan Anda.</p>
                     </div>
                 </div>
 
                 <!-- Card 2 -->
-                <div style="display: flex; margin-bottom: 40px; padding: 0 10rem; overflow: hidden; justify-content: center; align-items: center;">
+                <div
+                    style="display: flex; margin-bottom: 40px; padding: 0 10rem; overflow: hidden; justify-content: center; align-items: center;">
                     <div style="padding: 40px; width: 35rem;">
                         <h2 style="margin: 0 0 20px 0; color: #333;">Pemilihan Tanggal dan Waktu</h2>
-                        <p style="margin: 0; line-height: 1.6; color: #666;">Kalender interaktif yang memungkinkan Anda memilih tanggal dan waktu penggunaan ruangan dengan mudah, serta indikator ketersediaan untuk memastikan ruangan tidak bentrok dengan pemakaian lain.</p>
+                        <p style="margin: 0; line-height: 1.6; color: #666;">Kalender interaktif yang memungkinkan Anda
+                            memilih tanggal dan waktu penggunaan ruangan dengan mudah, serta indikator ketersediaan
+                            untuk memastikan ruangan tidak bentrok dengan pemakaian lain.</p>
                     </div>
-                    <img src="{{ asset('assets/img/landing2.png') }}" alt="About 2" style="width: 400px; height: 300px; object-fit: cover;">
+                    <img src="{{ asset('assets/img/landing2.png') }}" alt="About 2"
+                        style="width: 400px; height: 300px; object-fit: cover;">
                 </div>
 
                 <!-- Card 3 -->
-                <div style="display: flex; margin-bottom: 40px; padding: 0 10rem; overflow: hidden; justify-content: center; align-items: center;">
-                    <img src="{{ asset('assets/img/landing3.png') }}" alt="About 3" style="width: 400px; height: 300px; object-fit: cover;">
+                <div
+                    style="display: flex; margin-bottom: 40px; padding: 0 10rem; overflow: hidden; justify-content: center; align-items: center;">
+                    <img src="{{ asset('assets/img/landing3.png') }}" alt="About 3"
+                        style="width: 400px; height: 300px; object-fit: cover;">
                     <div style="padding: 40px; width: 35rem;">
                         <h2 style="margin: 0 0 20px 0; color: #333;">User-Friendly Interface</h2>
-                        <p style="margin: 0; line-height: 1.6; color: #666;">Desain antarmuka yang intuitif dan mudah digunakan, memastikan pengalaman pengguna yang nyaman dan efisien.</p>
+                        <p style="margin: 0; line-height: 1.6; color: #666;">Desain antarmuka yang intuitif dan mudah
+                            digunakan, memastikan pengalaman pengguna yang nyaman dan efisien.</p>
                     </div>
                 </div>
             </div>
