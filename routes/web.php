@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReservationController;
+use App\Models\Reservation;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -20,7 +22,8 @@ Route::get('/landing', function () {
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard');
+// 'verified'
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -40,9 +43,9 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('admin')->name('admin.')->group(function() {
-        Route::get('/verif-reservation', function () {
-            return view('room');
-        })->name('admin.verif-reservation');
+        Route::get('/verif-reservation', [ReservationController::class, 'index'])->name('admin.verif-reservation');
+        Route::get('/get-list', [ReservationController::class, 'getList'])->name('reservations.get_list');
+        Route::get('/update-status/{reservation}', [ReservationController::class, 'updateStatus'])->name('reservations.update_status');
     });
 });
 

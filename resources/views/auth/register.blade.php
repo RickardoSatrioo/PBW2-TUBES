@@ -5,14 +5,14 @@
         <!-- Name -->
         <div>
             <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+            <x-text-input id="name" class="block w-full mt-1" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
 
         <!-- Email Address -->
         <div class="mt-4">
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
+            <x-text-input id="email" class="block w-full mt-1" type="email" name="email" :value="old('email')" required autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
@@ -20,7 +20,7 @@
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />
 
-            <x-text-input id="password" class="block mt-1 w-full"
+            <x-text-input id="password" class="block w-full mt-1"
                             type="password"
                             name="password"
                             required autocomplete="new-password" />
@@ -32,7 +32,7 @@
         <div class="mt-4">
             <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
 
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
+            <x-text-input id="password_confirmation" class="block w-full mt-1"
                             type="password"
                             name="password_confirmation" required autocomplete="new-password" />
 
@@ -40,7 +40,7 @@
         </div>
 
         <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
+            <a class="text-sm text-gray-600 underline rounded-md dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
                 {{ __('Already registered?') }}
             </a>
 
@@ -73,36 +73,66 @@
     </style>
 
     <div class="bg-full">
-        <div class="content">
-            <p style="font-weight: bold; font-size: 40px;">SIGN IN</p>
-            <div class="bg-light d-flex p-2 rounded-5">
+        <form class="content" method="POST" action="{{ route('register') }}">
+            @csrf
+            <p style="font-weight: bold; font-size: 40px;">SIGN UP</p>
+            <div class="p-2 bg-light d-flex rounded-5">
                 <i class="ti ti-user"
                     style="font-size: 20px; background-color: black; border-radius: 100%; padding: 4px"></i>
-                <input type="text" placeholder="Username"
+                <input type="text" placeholder="Name" name="name" value="{{ old('name') }}"
                     style="background-color: transparent; outline-color: transparent; border-color: transparent;">
             </div>
-            <div class="bg-light d-flex p-2 rounded-5 mt-3">
-                <i class="ti ti-user"
+            @error('name')
+                <div class="rounded invalid-feedback d-block ps-2" style="background: white; text-align: left">
+                    {{ $message }}</div>
+            @enderror
+            <div class="p-2 mt-3 bg-light d-flex rounded-5">
+                <i class="ti ti-mail"
                     style="font-size: 20px; background-color: black; border-radius: 100%; padding: 4px"></i>
-                <input type="text" placeholder="Telp Number"
+                <input type="text" placeholder="Email" name="email" value="{{ old('email') }}"
                     style="background-color: transparent; outline-color: transparent; border-color: transparent;">
             </div>
-            <div class="bg-light d-flex justify-content-between p-2 rounded-5 mt-3">
+            @error('email')
+                <div class="rounded invalid-feedback d-block ps-2" style="background: white; text-align: left">
+                    {{ $message }}</div>
+            @enderror
+            <div class="p-2 mt-3 bg-light d-flex rounded-5">
+                <i class="ti ti-phone"
+                    style="font-size: 20px; background-color: black; border-radius: 100%; padding: 4px"></i>
+                <input type="text" placeholder="Telp Number" name="nophone" value="{{ old('nophone') }}"
+                    style="background-color: transparent; outline-color: transparent; border-color: transparent;">
+            </div>
+            @error('nophone')
+                <div class="rounded invalid-feedback d-block ps-2" style="background: white; text-align: left">
+                    {{ $message }}</div>
+            @enderror
+            <div class="p-2 mt-3 bg-light d-flex justify-content-between rounded-5">
                 <div>
-                    <i class="ti ti-key"
-                        style="font-size: 20px; color: black; padding: 4px"></i>
-                    <input type="password" placeholder="New Password"
+                    <i class="ti ti-key" style="font-size: 20px; color: black; padding: 4px"></i>
+                    <input type="password" placeholder="New Password" name="password"
                         style="background-color: transparent; outline-color: transparent; border-color: transparent;">
                 </div>
-                <i class="ti ti-eye-off" style="font-size: 20px; color: black; padding: 4px;"></i>
+                {{-- <i class="ti ti-eye-off" style="font-size: 20px; color: black; padding: 4px;"></i> --}}
             </div>
-            <div class="bg-light d-flex justify-content-between p-2 rounded-5 mt-3">
+            @error('password')
+                <div class="rounded invalid-feedback d-block ps-2" style="background: white; text-align: left">
+                    {{ $message }}</div>
+            @enderror
+            <div class="p-2 mt-3 bg-light d-flex justify-content-between rounded-5">
                 <div>
-                    <input type="password" placeholder="Confirm Password"
+                    <input type="password" placeholder="Confirm Password" name="password_confirmation"
                         style="background-color: transparent; outline-color: transparent; border-color: transparent; margin-left: 27px;">
                 </div>
-                <i class="ti ti-eye" style="font-size: 20px; color: black; padding: 4px;"></i>
+                {{-- <i class="ti ti-eye" style="font-size: 20px; color: black; padding: 4px;"></i> --}}
             </div>
-        </div>
+            @error('password_confirmation')
+            <div class="rounded invalid-feedback d-block ps-2" style="background: white; text-align: left">
+                {{ $message }}</div>
+            @enderror
+
+            <button type="submit" class="mt-3" style="background-color: #7E2F2F; padding: 10px 15px 10px 15px; border-radius: 10px;">
+                <p style="font-weight: bold; font-size: 20px; color: #fff; margin: 0">Signup</p>
+            </button>
+        </form>
     </div>
 </x-app-layout>

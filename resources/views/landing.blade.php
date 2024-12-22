@@ -98,9 +98,9 @@
     <div class="bg-full">
         {{-- navbar --}}
         <nav class="navbar navbar-expand-lg">
-            <div class="container-fluid gap-2 me-sm-4">
+            <div class="gap-2 container-fluid me-sm-4">
                 <section class="navbar-brand" href="#">UniShare</section>
-                <div class="ms-auto d-flex align-items-center border border-2 rounded-5 p-2">
+                <div class="p-2 border border-2 ms-auto d-flex align-items-center rounded-5">
                     <span class="text-white me-3">Selamat Datang !</span>
                     <button class="btn login-btn">Masuk</button>
                 </div>
@@ -129,19 +129,16 @@
                 <div class="search-section">
                     <div class="row g-3 align-items-center">
                         <div class="col-md-4">
-                            <input type="text" class="form-control border-0" placeholder="Nama Gedung">
+                            <input type="text" class="border-0 form-control" placeholder="Nama Gedung">
                         </div>
                         <div class="col-md-4">
-                            <select class="form-select border-0">
+                            <select class="border-0 form-select">
                                 <option selected>Ruangan</option>
                                 <!-- Add your options here -->
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <select class="form-select border-0">
-                                <option selected>Tujuan</option>
-                                <!-- Add your options here -->
-                            </select>
+                            <input type="text" name="purpose" class="border-0 form-control" placeholder="Tujuan peminjaman...">
                         </div>
                         <div class="col-md-1">
                             <button class="btn btn-danger rounded-circle">
@@ -152,7 +149,7 @@
                 </div>
 
                 <!-- Tags -->
-                <div class="d-flex gap-2 mt-3 justify-content-center align-items-center">
+                <div class="gap-2 mt-3 d-flex justify-content-center align-items-center">
                     <p class="m-0">Pencarian Terbaru -</p>
                     <div class="tag-buttons">
                         <button>TULT</button>

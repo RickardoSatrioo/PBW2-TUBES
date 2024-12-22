@@ -8,7 +8,7 @@
         <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+            <x-text-input id="email" class="block w-full mt-1" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
@@ -16,7 +16,7 @@
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />
 
-            <x-text-input id="password" class="block mt-1 w-full"
+            <x-text-input id="password" class="block w-full mt-1"
                             type="password"
                             name="password"
                             required autocomplete="current-password" />
@@ -27,14 +27,14 @@
         <!-- Remember Me -->
         <div class="block mt-4">
             <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
+                <input id="remember_me" type="checkbox" class="text-indigo-600 border-gray-300 rounded shadow-sm dark:bg-gray-900 dark:border-gray-700 focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
+                <span class="text-sm text-gray-600 ms-2 dark:text-gray-400">{{ __('Remember me') }}</span>
             </label>
         </div>
 
         <div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
+                <a class="text-sm text-gray-600 underline rounded-md dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
                     {{ __('Forgot your password?') }}
                 </a>
             @endif
@@ -68,21 +68,38 @@
     </style>
 
     <div class="bg-full">
-        <div class="content">
+        <form method="POST" action="{{ route('login') }}" class="content">
+            @csrf
             <p style="font-weight: bold; font-size: 40px;">LOGIN/SIGN IN</p>
-            <div class="bg-light d-flex p-2 rounded-5">
+            <div class="p-2 bg-light d-flex rounded-5">
                 <i class="ti ti-user"
                     style="font-size: 20px; background-color: black; border-radius: 100%; padding: 4px"></i>
-                <input type="text" placeholder="Username"
+                <input type="text" placeholder="Username" name="username_or_email"
                     style="background-color: transparent; outline-color: transparent; border-color: transparent;">
             </div>
-            <div class="bg-light d-flex justify-content-between p-2 rounded-5 mt-3">
-                <input type="password" placeholder="Password"
+            @error('username_or_email')
+                <div class="rounded invalid-feedback d-block ps-2" style="background: white; text-align: left">
+                    {{ $message }}</div>
+            @enderror
+
+
+            <div class="p-2 mt-3 bg-light d-flex justify-content-between rounded-5">
+                <input type="password" placeholder="Password" name="password"
                     style="background-color: transparent; outline-color: transparent; border-color: transparent; margin-left: 27px;">
-                <i class="ti ti-key"
-                    style="font-size: 20px; color: black; padding: 4px"></i>
+                <i class="ti ti-key" style="font-size: 20px; color: black; padding: 4px"></i>
             </div>
-            <p style="font-size: 11px; margin-top: 6px">DON’T HAVE ACCOUNT? <span class="text-danger">Create New Account!</span></p>
-        </div>
+            @error('password')
+                <div class="rounded invalid-feedback d-block ps-2" style="background: white; text-align: left">
+                    {{ $message }}</div>
+            @enderror
+
+            <p class="mt-3" style="font-size: 11px; margin-top: 6px;">DON’T HAVE ACCOUNT? <a href="{{ route('register') }}"
+                    class="text-danger">Create New
+                    Account!</a></p>
+
+                    <button class="mt-3" style="background-color: #7E2F2F; padding: 10px 15px 10px 15px; border-radius: 10px;">
+                        <p style="font-weight: bold; font-size: 20px; color: #fff; margin: 0">Login</p>
+                    </button>
+        </form>
     </div>
 </x-app-layout>
