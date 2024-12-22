@@ -13,4 +13,19 @@ class Building extends Model
     protected $table = 'building';
     protected $guarded = [''];
 
+    // protected $searchable = [
+    //     'columns' => [
+    //         'name' => 10,
+    //         'description' => 5,
+    //     ],
+    //     'joins' => [
+    //         'room' => ['building.id','room.room_id'],
+    //     ],
+    // ];
+
+    public function room()
+    {
+        return $this->hasMany(Room::class, 'id_building');
+    }
+
 }
