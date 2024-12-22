@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('created_by')
             ->constrained('users')
             ->onDelete('cascade');
-            $table->foreignId('approved_by')
+            $table->foreignId('approved_by')->nullable()
             ->constrained('users')
             ->onDelete('cascade');
             $table->timestamp('startDate');

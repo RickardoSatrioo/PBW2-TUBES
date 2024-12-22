@@ -70,6 +70,10 @@
             @if (session('error'))
                 toastr.error("{{ session('error') }}");
             @endif
+
+            @if (session('error2'))
+                toastr.error("{{ session('error2') }}");
+            @endif
         });
     </script>
 </body>

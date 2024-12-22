@@ -1,6 +1,6 @@
 <x-app-layout>
 
-    <div x-data="{ popBar: true }"
+    <div x-data="{ popBar: {{ session('openModal') ? 'true' : 'false' }} }"
         style="max-width: 1920px; max-height: 1080px; margin: 0 auto; overflow: hidden; position: relative;">
         {{-- Header --}}
         <div
@@ -21,10 +21,12 @@
                         placeholder="Cari gedung atau kelas">
                 </div>
                 <div style="display: flex; gap: 4rem;">
-                    <button
-                        style="text-align: center; border: none; background-color: transparent; font-weight: 600; color: #484848;">
-                        Beranda
-                    </button>
+                    <a href="{{ route('user.landing') }}">
+                        <button
+                            style="text-align: center; border: none; background-color: transparent; font-weight: 600; color: #484848;">
+                            Beranda
+                        </button>
+                    </a>
                     <button
                         style="text-align: center; border: none; background-color: transparent; font-weight: 600; color: #484848;">
                         Riwayat
@@ -34,12 +36,42 @@
 
             {{-- Right Side --}}
             <div style="display: flex; gap: 1rem; align-items: center;">
-                <button class="ti ti-user-circle"
-                    style="font-size: 2rem; border: none; background-color: transparent;"></button>
-                <button class="ti ti-menu-2"
-                    style="font-size: 2rem; border: none; background-color: transparent;"></button>
-            </div>
+                <x-dropdown align="right" width="48">
+                    <x-slot name="trigger">
+                        <button class="gap-2 btn btn-light d-flex justify-content-center align-items-center">
+                            <div>{{ Auth::user()->name }}</div>
+                            <div class="ti ti-user-circle" style="font-size: 3rem;"></div>
+                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </button>
 
+
+                    </x-slot>
+
+                    <x-slot name="content">
+                        <x-dropdown-link :href="route('profile.edit')">
+                            {{ __('Profile') }}
+                        </x-dropdown-link>
+
+                        <!-- Authentication -->
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+
+                            <x-dropdown-link :href="route('logout')"
+                                onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                                {{ __('Log Out') }}
+                            </x-dropdown-link>
+                        </form>
+                    </x-slot>
+                </x-dropdown>
+                {{-- <button class="ti ti-menu-2"
+                    style="font-size: 2rem; border: none; background-color: transparent;"></button> --}}
+            </div>
         </div>
 
         <div style="height: 968px; width: 100%; overflow-y: auto; margin-top: 5rem;">
@@ -49,8 +81,8 @@
                 style="min-height: 846px; height: 92%; width: 1496px; box-sizing: border-box; margin: 0 auto; padding-top: 2rem; display: flex; flex-wrap: nowrap; flex-direction: column; gap: 2rem;">
                 <div style="width: 100%; justify-content: space-between; display: flex; height: 100%;">
                     <div style="color: #7F8FA4; align-content: center">
-                        <h5 style="margin-bottom: 0 !important;">Telkom University • Gedung • <span
-                                style="color: black;">Audiotorium</span></h5>
+                        <h5 style="margin-bottom: 0 !important;">Telkom University • {{ $room->building->name }} • <span
+                                style="color: black;">{{ $room->name }}</span></h5>
                     </div>
                     <button
                         style="background-color: #ebeef3b2; padding: 0.5rem 1rem; border-radius: 0.5rem; color: #354052c2; border:none; font-size: 1.2rem; font-weight: 600;">Kembali</button>
@@ -63,11 +95,23 @@
                     </div>
                     <div style="display: flex; justify-content: space-between; padding-top: 3rem;">
                         <div style="">
-                            <h2 style="font-weight: 700">Audiotorium Lt 16 - TULT</h2>
+                            <h2 style="font-weight: 700">{{ $room->name }} - {{ $room->building->name }}</h2>
                             <ul style="display: flex; gap: 2rem; padding: 0; margin-left: 1rem;">
-                                <li style="font-size: 1.2rem !important;"><span style="color: #f0a012">Tutup</span>
-                                    Tersedia 06.00 WIB</li>
-                                <li style="font-size: 1.2rem !important;">Kapasitas : 100 orang</li>
+                                <li style="font-size: 1.2rem !important;">
+                                    @php
+                                        $now = \Carbon\Carbon::now();
+                                        $openTime = \Carbon\Carbon::parse($room->open);
+                                        $closeTime = \Carbon\Carbon::parse($room->close);
+                                    @endphp
+
+                                    @if ($now->between($openTime, $closeTime))
+                                        <span style="color: #28a745;">Buka</span>
+                                    @else
+                                        <span style="color: #f0a012;">Tutup</span>
+                                    @endif
+                                    Tersedia {{ \Carbon\Carbon::parse($room->open)->format('H.i') }} WIB
+                                </li>
+                                <li style="font-size: 1.2rem !important;">Kapasitas : {{ $room->capacity }} orang</li>
                             </ul>
                         </div>
                         <div style="display: flex; gap: 2rem; align-items: center;">
@@ -119,7 +163,7 @@
                                         :style="selectedDate === date.fullDate ?
                                             'display: flex; justify-content: center; align-items: center; border: 2px dashed #661a1a; color: black; border-radius: 1rem !important; background-color: #eee6e6; min-width: 6rem; min-height: 6.5rem; cursor: pointer;' :
                                             'display: flex; justify-content: center; align-items: center; border: 2px solid #484848; color: black; border-radius: 1rem !important; background-color: #ffffff; min-width: 6rem; min-height: 6.5rem; cursor: pointer;'">
-                                    {{-- <div @click="selectDate(date)"
+                                        {{-- <div @click="selectDate(date)"
                                         :style="selectedDate === date.fullDate ?
                                             'display: flex; justify-content: center; align-items: center; border: 2px solid #FFA101; color: white; border-radius: 1rem !important; background-color: #FFA101; min-width: 6rem; min-height: 6.5rem; cursor: pointer;' :
                                             'display: flex; justify-content: center; align-items: center; border: 2px solid #484848; color: black; border-radius: 1rem !important; background-color: #ffffff; min-width: 6rem; min-height: 6.5rem; cursor: pointer;'"> --}}
@@ -147,7 +191,7 @@
                         </div>
 
                         {{-- Right --}}
-                        <div style="width: 550px;">
+                        <div style="width: 550px; overflow-y: auto;">
 
                             <div
                                 style="background-color: #ffffff; padding: 1.5rem; border-radius: 1rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); max-width: 450px; margin: auto;">
@@ -192,13 +236,19 @@
                                     get timeStart() { return this.endDateTime ? this.startDateTime.split(' ')[1].slice(0, 5) : '--:--'; },
                                     get date() { return this.endDateTime ? this.endDateTime.split(' ')[0] : '----/--/--'; }
                                 }" class="booking-time-container">
-                                    <h3 style="font-weight: 600; margin: 2rem 0 1.5rem; font-size: 1.25rem; color: #333;">Waktu Peminjaman</h3>
+                                    <h3
+                                        style="font-weight: 600; margin: 2rem 0 1.5rem; font-size: 1.25rem; color: #333;">
+                                        Waktu Peminjaman</h3>
 
-                                    <div style=" display: flex; justify-content: space-between; padding: 1.5rem 2rem; background: #f8f9fa; border-radius: 1rem; margin-bottom: 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); ">
+                                    <div
+                                        style=" display: flex; justify-content: space-between; padding: 1.5rem 2rem; background: #f8f9fa; border-radius: 1rem; margin-bottom: 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); ">
                                         <!-- Start Time Section -->
                                         <div style="flex: 1; text-align: center;">
-                                            <h5 style=" font-weight: 500; margin-bottom: 0.75rem; color: #666; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; ">Mulai</h5>
-                                            <h4 style=" font-weight: 600; font-size: 1.5rem; color: #2c3e50; margin: 0; " x-text="timeStart"></h4>
+                                            <h5
+                                                style=" font-weight: 500; margin-bottom: 0.75rem; color: #666; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; ">
+                                                Mulai</h5>
+                                            <h4 style=" font-weight: 600; font-size: 1.5rem; color: #2c3e50; margin: 0; "
+                                                x-text="timeStart"></h4>
                                         </div>
 
                                         <!-- Divider -->
@@ -206,23 +256,57 @@
 
                                         <!-- End Time Section -->
                                         <div style="flex: 1; text-align: center;">
-                                            <h5 style=" font-weight: 500; margin-bottom: 0.75rem; color: #666; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">Selesai</h5>
-                                            <h4 style=" font-weight: 600; font-size: 1.5rem; color: #2c3e50; margin: 0; " x-text="timeEnd"></h4>
+                                            <h5
+                                                style=" font-weight: 500; margin-bottom: 0.75rem; color: #666; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                                                Selesai</h5>
+                                            <h4 style=" font-weight: 600; font-size: 1.5rem; color: #2c3e50; margin: 0; "
+                                                x-text="timeEnd"></h4>
                                         </div>
+                                    </div>
+                                    <div class="gap-4 d-flex">
+                                        @error('startDateTime')
+                                            <div class="m-0 mb-3 rounded invalid-feedback d-block ps-2"
+                                                style="background: white; text-align: left">
+                                                {{ $message }}</div>
+                                        @enderror
+                                        @error('endDateTime')
+                                            <div class="m-0 mb-3 rounded invalid-feedback d-block ps-2"
+                                                style="background: white; text-align: left">
+                                                {{ $message }}</div>
+                                        @enderror
                                     </div>
 
                                     <!-- Date Section -->
-                                    <div style=" text-align: center; padding: 1rem; background: #fff; border-radius: 1rem; border: 1px solid #eee; ">
-                                        <h5 style=" font-weight: 500; margin-bottom: 0.5rem; color: #666; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; ">Tanggal</h5>
-                                        <h4 style=" font-weight: 600; font-size: 1.25rem;color: #2c3e50; margin: 0;" x-text="date"></h4>
+                                    <div
+                                        style=" text-align: center; padding: 1rem; background: #fff; border-radius: 1rem; border: 1px solid #eee; ">
+                                        <h5
+                                            style=" font-weight: 500; margin-bottom: 0.5rem; color: #666; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; ">
+                                            Tanggal</h5>
+                                        <h4 style=" font-weight: 600; font-size: 1.25rem;color: #2c3e50; margin: 0;"
+                                            x-text="date"></h4>
                                     </div>
                                 </div>
 
                                 <form action="{{ route('admin.make_reservation') }}" method="POST"
                                     enctype="multipart/form-data">
                                     @csrf
+                                    <input type="hidden" value="{{ $room->id }}" name="id_room">
                                     <!-- Input File -->
-                                    <h5 style="font-weight: 600; margin-bottom: 1rem; margin-top: 1.4rem">Upload Proposal</h5>
+                                    <h5 style="font-weight: 600; margin-bottom: 1rem; margin-top: 1.4rem">Tujuan</h5>
+                                    <div style="border: 2px dashed #ccc; border-radius: 8px; padding: 1rem; text-align: center; background-color: #f9f9f9; transition: border-color 0.3s, background-color 0.3s; cursor: pointer;"
+                                        onmouseover="this.style.borderColor='#661a1a'; this.style.backgroundColor='#eee6e6';"
+                                        onmouseout="this.style.borderColor='#ccc'; this.style.backgroundColor='#f9f9f9';">
+                                        <input name="purpose" type="text" style="width: 100%"
+                                            value="{{ old('purpose') }}">
+                                        @error('purpose')
+                                            <div class="m-0 rounded invalid-feedback d-block ps-2"
+                                                style="background: white; text-align: left">
+                                                {{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <!-- Input File -->
+                                    <h5 style="font-weight: 600; margin-bottom: 1rem; margin-top: 1.4rem">Upload
+                                        Proposal</h5>
                                     {{-- <div style="border: 2px dashed #ccc; border-radius: 8px; padding: 1rem; text-align: center; background-color: #f9f9f9; transition: border-color 0.3s, background-color 0.3s; cursor: pointer;"
                                         onmouseover="this.style.borderColor='#661a1a'; this.style.backgroundColor='#eee6e6';"
                                         onmouseout="this.style.borderColor='#ccc'; this.style.backgroundColor='#f9f9f9';">
@@ -241,63 +325,75 @@
                                             Choose File
                                         </button>
                                     </div> --}}
-                                    <div
-                                        x-data="{
-                                            fileName: '',
-                                            fileSize: '',
-                                            handleFile(event) {
-                                                const file = event.target.files[0];
-                                                if (file) {
-                                                    this.fileName = file.name;
-                                                    this.fileSize = this.formatFileSize(file.size);
-                                                }
-                                            },
-                                            formatFileSize(bytes) {
-                                                if (bytes === 0) return '0 Bytes';
-                                                const k = 1024;
-                                                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-                                                const i = Math.floor(Math.log(bytes) / Math.log(k));
-                                                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-                                            },
-                                            removeFile() {
-                                                this.fileName = '';
-                                                this.fileSize = '';
-                                                document.getElementById('fileID').value = '';
+                                    <div x-data="{
+                                        fileName: '',
+                                        fileSize: '',
+                                        handleFile(event) {
+                                            const file = event.target.files[0];
+                                            if (file) {
+                                                this.fileName = file.name;
+                                                this.fileSize = this.formatFileSize(file.size);
                                             }
-                                        }">
+                                        },
+                                        formatFileSize(bytes) {
+                                            if (bytes === 0) return '0 Bytes';
+                                            const k = 1024;
+                                            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                                            const i = Math.floor(Math.log(bytes) / Math.log(k));
+                                            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+                                        },
+                                        removeFile() {
+                                            this.fileName = '';
+                                            this.fileSize = '';
+                                            document.getElementById('fileID').value = '';
+                                        }
+                                    }">
                                         <!-- Original File Input Design -->
-                                        <div x-show="!fileName" style="border: 2px dashed #ccc; border-radius: 8px; padding: 1rem; text-align: center; background-color: #f9f9f9; transition: border-color 0.3s, background-color 0.3s; cursor: pointer;"
+                                        <div x-show="!fileName"
+                                            style="border: 2px dashed #ccc; border-radius: 8px; padding: 1rem; text-align: center; background-color: #f9f9f9; transition: border-color 0.3s, background-color 0.3s; cursor: pointer;"
                                             onmouseover="this.style.borderColor='#661a1a'; this.style.backgroundColor='#eee6e6';"
                                             onmouseout="this.style.borderColor='#ccc'; this.style.backgroundColor='#f9f9f9';">
                                             <header>
-                                                <h4 style="font-size: 1.2rem; font-weight: bold; color: #555; margin-bottom: 0.5rem;">
+                                                <h4
+                                                    style="font-size: 1.2rem; font-weight: bold; color: #555; margin-bottom: 0.5rem;">
                                                     Select File Here</h4>
                                             </header>
                                             <p style="font-size: 0.9rem; color: #888; margin-bottom: 1rem;">Files
                                                 Supported: PDF, TEXT, DOC, DOCX</p>
-                                            <input name="proposal" type="file" hidden accept=".doc,.docx,.pdf" id="fileID" @change="handleFile($event)">
+                                            <input name="proposal" type="file" hidden accept=".doc,.docx,.pdf"
+                                                id="fileID" @change="handleFile($event)">
                                             <div type="button" @click="document.getElementById('fileID').click();"
                                                 style="display: inline-block; padding: 0.5rem 1rem; font-size: 0.9rem; font-weight: bold; color: #fff; background-color: #550000; border: none; border-radius: 4px; cursor: pointer; transition: background-color 0.3s;"
                                                 onmouseover="this.style.backgroundColor='#790000';"
                                                 onmouseout="this.style.backgroundColor='#550000';">
                                                 Choose File
                                             </div>
+                                            @error('proposal')
+                                            <div class="m-0 rounded invalid-feedback d-block ps-2"
+                                                style="background: white; text-align: left">
+                                                {{ $message }}</div>
+                                        @enderror
                                         </div>
 
                                         <!-- File Preview -->
                                         <div x-show="fileName"
                                             style="border: 2px dashed #ccc; border-radius: 8px; padding: 1rem; background-color: #f9f9f9;">
-                                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <div
+                                                style="display: flex; justify-content: space-between; align-items: center;">
                                                 <div style="display: flex; flex-direction: column; gap: 0.25rem;">
-                                                    <span style="font-size: 1rem; font-weight: 500; color: #555;" x-text="fileName"></span>
-                                                    <span style="font-size: 0.85rem; color: #888;" x-text="fileSize"></span>
+                                                    <span style="font-size: 1rem; font-weight: 500; color: #555;"
+                                                        x-text="fileName"></span>
+                                                    <span style="font-size: 0.85rem; color: #888;"
+                                                        x-text="fileSize"></span>
                                                 </div>
                                                 <div @click="removeFile"
                                                     style="cursor: pointer; padding: 0.5rem; color: #550000;"
                                                     onmouseover="this.style.color='#790000';"
                                                     onmouseout="this.style.color='#550000';">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none">
-                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20"
+                                                        height="20" viewBox="0 0 24 24" stroke-width="1.5"
+                                                        stroke="currentColor" fill="none">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                         <path d="M18 6l-12 12" />
                                                         <path d="M6 6l12 12" />
                                                     </svg>
@@ -305,8 +401,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <input style="display: none" type="text" id="startDateTime" x-model="startDateTime" name="startDateTime" readonly>
-                                    <input style="display: none" type="text" id="endDateTime" x-model="endDateTime" name="endDateTime" readonly>
+                                    <input style="display: none" type="text" id="startDateTime"
+                                        x-model="startDateTime" name="startDateTime" readonly>
+                                    <input style="display: none" type="text" id="endDateTime"
+                                        x-model="endDateTime" name="endDateTime" readonly>
                                     <!-- Tombol Submit -->
                                     <button type="submit"
                                         style="margin-top: 1.5rem; width: 100%; padding: 0.75rem; font-size: 0.875rem; font-weight: bold; color: white; background-color: #550000; border: none; border-radius: 0.5rem; cursor: pointer; transition: background-color 0.3s;">

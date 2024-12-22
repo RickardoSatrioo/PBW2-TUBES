@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MakeReservationRequest;
 use App\Http\Requests\StoreReservationRequest;
 use App\Http\Requests\UpdateReservationRequest;
 use App\Models\Reservation;
@@ -22,8 +23,51 @@ class ReservationController extends Controller
         ]);
     }
 
-    public function makeReservation(Request $request) {
-        dd($request->all());
+    public function makeReservation(MakeReservationRequest $request)
+    {
+       DB::beginTransaction();
+
+        try {
+            // Validasi untuk memeriksa apakah waktu yang dipilih sudah dipesan
+            $existingReservation = Reservation::where('id_room', $request->id_room)
+                ->where(function ($query) use ($request) {
+                    $query->whereBetween('startDate', [$request->startDateTime, $request->endDateTime])
+                        ->orWhereBetween('endDate', [$request->startDateTime, $request->endDateTime])
+                        ->orWhere(function ($query) use ($request) {
+                            $query->where('startDate', '<=', $request->startDateTime)
+                                ->where('endDate', '>=', $request->endDateTime);
+                        });
+                })
+                ->exists();
+
+            if ($existingReservation) {
+                return redirect()->back()->with('error', 'Waktu yang dipilih sudah dipesan. Silakan pilih waktu lain.');
+            }
+
+            // Hitung durasi dalam jam
+            $duration = \Carbon\Carbon::parse($request->startDateTime)->diffInHours(\Carbon\Carbon::parse($request->endDateTime));
+
+            // Simpan data reservasi
+            $reservation = Reservation::create([
+                'id_room' => $request->id_room,
+                'created_by' => auth()->user()->id,
+                'purpose' => $request->purpose,
+                'startDate' => $request->startDateTime,
+                'endDate' => $request->endDateTime,
+                'file_proposal' => $request->file('proposal')->store('file_proposals'),
+                'duration' => $duration . ' Jam',
+                'status' => 'Pending',
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('user.landing')->with('success', "Berhasil membuat reservasi!");
+        } catch (Exception $e) {
+            dd($e);
+            DB::rollBack();
+            session()->flash('openModal', true);
+            return redirect()->back()->withInput()->with('error', "Gagal membuat reservasi! Silakan coba lagi.");
+        }
     }
 
     public function getList(Request $request)
@@ -92,7 +136,8 @@ class ReservationController extends Controller
     }
 
 
-    public function updateStatus(Request $request, Reservation $reservation) {
+    public function updateStatus(Request $request, Reservation $reservation)
+    {
         DB::beginTransaction();
         try {
 
@@ -100,7 +145,7 @@ class ReservationController extends Controller
                 'status' => $request->status,
                 'approved_by' => auth()->user()->id,
             ];
-            if($request->reason) {
+            if ($request->reason) {
                 $data['reason_reject'] = $request->reason;
             }
             $reservation->update($data);
