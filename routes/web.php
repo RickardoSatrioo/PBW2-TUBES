@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReservationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -39,11 +40,18 @@ Route::middleware('auth')->group(function () {
         })->name('history_reservation');
     });
 
-    Route::prefix('admin')->name('admin.')->group(function() {
-        Route::get('/verif-reservation', function () {
-            return view('room');
-        })->name('admin.verif-reservation');
-    });
+    // Route::prefix('admin')->name('admin.')->group(function() {
+    //     Route::get('/verif-reservation', function () {
+    //         return view('room');
+    //     })->name('admin.verif-reservation');
+    //     Route::post('/make-reservation', [ReservationController::class, 'makeReservation'])->name('make_reservation');
+    // });
 });
 
+Route::prefix('admin')->name('admin.')->group(function() {
+    Route::get('/verif-reservation', function () {
+        return view('room');
+    })->name('admin.verif-reservation');
+    Route::post('/make-reservation', [ReservationController::class, 'makeReservation'])->name('make_reservation');
+});
 require __DIR__.'/auth.php';
