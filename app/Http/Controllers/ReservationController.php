@@ -22,6 +22,10 @@ class ReservationController extends Controller
         ]);
     }
 
+    public function makeReservation(Request $request) {
+        dd($request->all());
+    }
+
     public function getList(Request $request)
     {
         // Get the status from query string (defaults to 'pending')
@@ -87,9 +91,6 @@ class ReservationController extends Controller
         //
     }
 
-    public function makeReservation(Request $request) {
-
-    }
 
     public function updateStatus(Request $request, Reservation $reservation) {
         DB::beginTransaction();

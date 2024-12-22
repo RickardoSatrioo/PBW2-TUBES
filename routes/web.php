@@ -42,11 +42,21 @@ Route::middleware('auth')->group(function () {
         })->name('history_reservation');
     });
 
-    Route::prefix('admin')->name('admin.')->group(function() {
-        Route::get('/verif-reservation', [ReservationController::class, 'index'])->name('admin.verif-reservation');
-        Route::get('/get-list', [ReservationController::class, 'getList'])->name('reservations.get_list');
-        Route::get('/update-status/{reservation}', [ReservationController::class, 'updateStatus'])->name('reservations.update_status');
-    });
+    // Route::prefix('admin')->name('admin.')->group(function() {
+    //     Route::get('/verif-reservation', function () {
+    //         return view('room');
+    //     })->name('admin.verif-reservation');
+    //     Route::post('/make-reservation', [ReservationController::class, 'makeReservation'])->name('make_reservation');
+    // });
 });
 
+Route::prefix('admin')->name('admin.')->group(function() {
+    Route::get('/verif-reservation', function () {
+        return view('room');
+    })->name('admin.verif-reservation');
+    Route::post('/make-reservation', [ReservationController::class, 'makeReservation'])->name('make_reservation');
+    Route::get('/verif-reservation', [ReservationController::class, 'index'])->name('admin.verif-reservation');
+    Route::get('/get-list', [ReservationController::class, 'getList'])->name('reservations.get_list');
+    Route::get('/update-status/{reservation}', [ReservationController::class, 'updateStatus'])->name('reservations.update_status');
+});
 require __DIR__.'/auth.php';
