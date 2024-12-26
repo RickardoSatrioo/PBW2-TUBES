@@ -8,7 +8,9 @@
 
             {{-- Left Side --}}
             <div>
-                <h1 style="margin: 0; font-size: 2.5rem; font-weight: 700;">UniShare</h1>
+                <a href="{{ route('landing') }}" style="text-decoration: none; color: inherit;">
+                    <h1 style="margin: 0; font-size: 2.5rem; font-weight: 700;">UniShare</h1>
+                </a>
             </div>
 
             {{-- Center Side --}}
@@ -17,58 +19,50 @@
                 <div
                     style="background-color: #F7F8FA; border-radius: 5rem; display: flex; gap: 1rem; padding: 0.5rem 1rem;">
                     <span class="ti ti-search" style="font-size: 1.8rem; color: #BBC5D5;"></span>
-                    <input type="text" style="width: 15vw; border: none; background-color: transparent; outline: none;"
+                    <input type="text"
+                        style="width: 15vw; border: none; background-color: transparent; outline: none;"
                         placeholder="Cari gedung atau kelas">
                 </div>
                 <div style="display: flex; gap: 4rem;">
-                    <a href="{{ route('landing') }}">
+                    <a href="{{ route('landing') }}" style="text-decoration: none; color: inherit;">
                         <button
                             style="text-align: center; border: none; background-color: transparent; font-weight: 600; color: #484848;">
                             Beranda
                         </button>
                     </a>
-                    <button
-                        style="text-align: center; border: none; background-color: transparent; font-weight: 600; color: #484848;">
-                        Riwayat
-                    </button>
+                    <a href="{{ route('user.history_reservation') }}">
+                        <button
+                            style="text-align: center; border: none; background-color: transparent; font-weight: 600; color: #484848;">
+                            Riwayat
+                        </button>
+                    </a>
                 </div>
             </div>
 
             {{-- Right Side --}}
             <div style="display: flex; gap: 1rem; align-items: center;">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="gap-2 btn btn-light d-flex justify-content-center align-items-center">
-                            <div>{{ Auth::user()->name }}</div>
-                            <div class="ti ti-user-circle" style="font-size: 3rem;"></div>
-                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path fill-rule="evenodd"
-                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </button>
+                <a href="{{ route('profile.edit') }}">
+                    <button class="ti ti-user-circle"
+                        style="font-size: 2rem; border: none; background-color: transparent;"></button>
+                </a>
+                @auth
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
 
-
-                    </x-slot>
-
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
-
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <x-dropdown-link :href="route('logout')"
-                                onclick="event.preventDefault();
+                        <x-dropdown-link :href="route('logout')"
+                            onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
+                            <button class="ti ti-logout"
+                                style="font-size: 2rem; border: none; background-color: transparent;"></button>
+                        </x-dropdown-link>
+                    </form>
+                @endauth
+                @guest
+                    <a href="{{ route('login') }}">
+                        <button class="ti ti-login"
+                            style="font-size: 2rem; border: none; background-color: transparent;"></button>
+                    </a>
+                @endguest
                 {{-- <button class="ti ti-menu-2"
                     style="font-size: 2rem; border: none; background-color: transparent;"></button> --}}
             </div>
@@ -84,13 +78,22 @@
                         <h5 style="margin-bottom: 0 !important;">Telkom University • {{ $room->building->name }} • <span
                                 style="color: black;">{{ $room->name }}</span></h5>
                     </div>
-                    <button
-                        style="background-color: #ebeef3b2; padding: 0.5rem 1rem; border-radius: 0.5rem; color: #354052c2; border:none; font-size: 1.2rem; font-weight: 600;">Kembali</button>
+
+                    <a href="{{ URL::previous() }}" style="text-decoration: none; color: inherit;">
+                        <button
+                            style="background-color: #ebeef3b2; padding: 0.5rem 1rem; border-radius: 0.5rem; color: #354052c2; border:none; font-size: 1.2rem; font-weight: 600;">Kembali</button>
+                    </a>
                 </div>
                 <div style="width: 100%; min-height: 100%;">
+                    @php
+                        $imagePath =
+                            $room->image && \Storage::exists('public/' . $room->image)
+                                ? 'storage/' . $room->image
+                                : 'assets/img/bg-telu2.png';
+                    @endphp
                     <div
                         style="margin: 1rem auto; background-color: #484848; padding: 0; border-radius: 0.8rem; width: 62%; aspect-ratio: 11/6; overflow: hidden; position: relative;">
-                        <img src="{{ asset('assets/img/bg-telu2.png') }}" alt=""
+                        <img src="{{ asset($imagePath) }}" alt=""
                             style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
                     <div style="display: flex; justify-content: space-between; padding-top: 3rem;">
@@ -115,9 +118,9 @@
                             </ul>
                         </div>
                         <div style="display: flex; gap: 2rem; align-items: center;">
-                            <button
+                            {{-- <button
                                 style="background-color: #ebeef3; padding: 1rem 1.5rem; border-radius: 0.5rem; color: #354052; border:none; font-size: 1.25rem; font-weight: 600;">Cek
-                                Tanggal</button>
+                                Tanggal</button> --}}
                             <button @click="popBar = true"
                                 style="background-color: #550000; padding: 1rem 1.5rem; border-radius: 0.5rem; color: white; border:none; font-size: 1.25rem; font-weight: 600;">Reservasi
                                 Sekarang</button>
@@ -148,6 +151,10 @@
                         <h2 style="font-weight: 700">Pilih Waktu</h2>
                         <button @click="popBar = false"
                             style="background-color: #ebeef3b2; padding: 0.5rem 1rem; border-radius: 0.5rem; color: #354052c2; border:none; font-size: 1.2rem; font-weight: 600;">Tutup</button>
+                    </div>
+                    <div class="header">
+                        <button class="ti ti-arrow-left btn btn-sm" @click="previousMonth()" :disabled="!isPreviousMonthAvailable"></button>
+                        <button class="ti ti-arrow-right btn btn-sm" @click="nextMonth()"></button>
                     </div>
 
                     <div style="display: flex; gap: 2rem">
@@ -191,7 +198,7 @@
                         </div>
 
                         {{-- Right --}}
-                        <div style="width: 550px; overflow-y: auto;">
+                        <div style="width: 550px; overflow-y: auto; height: 80vh;">
 
                             <div
                                 style="background-color: #ffffff; padding: 1.5rem; border-radius: 1rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); max-width: 450px; margin: auto;">
@@ -287,7 +294,7 @@
                                     </div>
                                 </div>
 
-                                <form action="{{ route('admin.make_reservation') }}" method="POST"
+                                <form action="{{ route('user.make_reservation') }}" method="POST"
                                     enctype="multipart/form-data">
                                     @csrf
                                     <input type="hidden" value="{{ $room->id }}" name="id_room">
@@ -369,10 +376,10 @@
                                                 Choose File
                                             </div>
                                             @error('proposal')
-                                            <div class="m-0 rounded invalid-feedback d-block ps-2"
-                                                style="background: white; text-align: left">
-                                                {{ $message }}</div>
-                                        @enderror
+                                                <div class="m-0 rounded invalid-feedback d-block ps-2"
+                                                    style="background: white; text-align: left">
+                                                    {{ $message }}</div>
+                                            @enderror
                                         </div>
 
                                         <!-- File Preview -->
@@ -445,6 +452,9 @@
                     length: 15
                 }, (_, i) => i + 7),
                 filteredDates: [],
+                today: new Date(),
+                displayStartDate: null,
+                isPreviousMonthAvailable: true,
 
                 selectDate(date) {
                     const dateObj = new Date(date.fullDate);
@@ -505,7 +515,7 @@
                     }
 
                     this.updateSelectedTimesDisplay();
-                    this.updateDateTimeRange(); // Update the datetime range whenever times change
+                    this.updateDateTimeRange();
                 },
 
                 isTimeActive(hour) {
@@ -523,20 +533,16 @@
                     const rangeStart = Math.min(start, end);
                     const rangeEnd = Math.max(start, end);
                     this.timeArray = Array.from({
-                            length: rangeEnd - rangeStart + 1
-                        },
-                        (_, i) => rangeStart + i
-                    ).sort((a, b) => a - b);
+                        length: rangeEnd - rangeStart + 1
+                    }, (_, i) => rangeStart + i).sort((a, b) => a - b);
                 },
 
                 updateSelectedTimesDisplay() {
                     if (this.timeArray.length > 0) {
-                        const formattedTimes = this.timeArray
-                            .map(time => {
-                                const hour = time.toString().padStart(2, '0');
-                                return `${hour}:00`;
-                            })
-                            .join(', ');
+                        const formattedTimes = this.timeArray.map(time => {
+                            const hour = time.toString().padStart(2, '0');
+                            return `${hour}:00`;
+                        }).join(', ');
                         this.selectedTimes = formattedTimes;
                     } else {
                         this.selectedTimes = '';
@@ -544,36 +550,62 @@
                 },
 
                 getFilteredDates() {
-                    let today = new Date();
-                    let tomorrow = new Date(today);
-                    tomorrow.setDate(today.getDate() + 1);
+    let startDate = this.displayStartDate || new Date();
 
-                    let lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-                    let dates = [];
+    // Clone today's date for comparison
+    const todayClone = new Date(this.today);
 
-                    let currentDate = new Date(tomorrow);
+    // If we are in the current month, start from today's date
+    if (
+        startDate.getFullYear() === todayClone.getFullYear() &&
+        startDate.getMonth() === todayClone.getMonth()
+    ) {
+        startDate.setDate(todayClone.getDate()); // Start from today
+    } else {
+        startDate.setDate(1); // For other months, start from the 1st
+    }
 
-                    while (currentDate <= lastDayOfMonth) {
-                        const year = currentDate.getFullYear();
-                        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-                        const day = String(currentDate.getDate()).padStart(2, '0');
+    // Calculate the last day of the current month
+    let lastDayOfMonth = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);  // This gives us the last day of the month
+    lastDayOfMonth.setHours(23, 59, 59, 999); // Ensure we include the full last day (set to 23:59:59)
 
-                        dates.push({
-                            fullDate: `${year}-${month}-${day}`,
-                            weekday: this.getWeekdayName(currentDate),
-                            day: currentDate.getDate()
-                        });
+    let dates = [];
 
-                        currentDate = new Date(currentDate);
-                        currentDate.setDate(currentDate.getDate() + 1);
-                    }
+    let currentDate = new Date(startDate);  // Set currentDate to the start of the month
+    currentDate.setHours(0, 0, 0, 0);  // Reset currentDate to midnight (00:00:00)
 
-                    this.filteredDates = dates;
-                    this.currentMonth = tomorrow.toLocaleString('default', {
-                        month: 'long',
-                        year: 'numeric'
-                    });
-                },
+    // Loop through the days of the month
+    while (currentDate <= lastDayOfMonth) {
+        const year = currentDate.getFullYear();
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate()).padStart(2, '0');
+
+        // Push each date to the dates array
+        dates.push({
+            fullDate: `${year}-${month}-${day}`,
+            weekday: this.getWeekdayName(currentDate),
+            day: currentDate.getDate()
+        });
+
+        // Log each added date (for debugging)
+        console.log("Added Date:", currentDate);
+
+        // Move to the next day
+        currentDate.setDate(currentDate.getDate() + 1);
+        currentDate.setHours(0, 0, 0, 0); // Reset to midnight after each increment
+    }
+
+    // Update the filteredDates and currentMonth values
+    this.filteredDates = dates;
+    this.currentMonth = startDate.toLocaleString('default', {
+        month: 'long',
+        year: 'numeric'
+    });
+
+    // Log the final filtered dates (for debugging)
+    console.log("Filtered Dates:", this.filteredDates);
+}
+,
 
                 getWeekdayName(date) {
                     const weekdays = {
@@ -588,7 +620,37 @@
                     return weekdays[date.getDay()];
                 },
 
+                nextMonth() {
+                    let currentMonthDate = new Date(this.displayStartDate || this.today);
+                    let nextMonthDate = new Date(currentMonthDate.setMonth(currentMonthDate.getMonth() + 1));
+                    this.displayStartDate = new Date(nextMonthDate.setDate(1));
+                    this.checkPreviousMonthAvailability();
+                    this.getFilteredDates();
+                },
+
+                previousMonth() {
+                    let currentMonthDate = new Date(this.displayStartDate || this.today);
+                    let prevMonthDate = new Date(currentMonthDate.setMonth(currentMonthDate.getMonth() - 1));
+
+                    // Tetapkan tanggal hanya jika bulan sebelumnya valid
+                    if (prevMonthDate.getMonth() === this.today.getMonth() || prevMonthDate >= this.today) {
+                        this.displayStartDate = new Date(prevMonthDate.setDate(1));
+                    }
+
+                    this.checkPreviousMonthAvailability();
+                    this.getFilteredDates();
+                },
+
+                checkPreviousMonthAvailability() {
+                    let currentMonthDate = new Date(this.displayStartDate || this.today);
+                    let previousMonthDate = new Date(currentMonthDate.setMonth(currentMonthDate.getMonth() - 1));
+                    this.isPreviousMonthAvailable =
+                        previousMonthDate.getMonth() === this.today.getMonth() || previousMonthDate >= this.today;
+                },
+
                 init() {
+                    this.displayStartDate = new Date(this.today.setDate(this.today.getDate() + 1)); // Mulai dari besok
+                    this.checkPreviousMonthAvailability();
                     this.getFilteredDates();
                 }
             };

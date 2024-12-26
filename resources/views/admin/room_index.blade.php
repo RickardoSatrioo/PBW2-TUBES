@@ -141,7 +141,7 @@
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <button class="btn btn-light d-flex justify-content-center align-items-center gap-2">
+                        <button class="gap-2 btn btn-light d-flex justify-content-center align-items-center">
                             <div>{{ Auth::user()->name }}</div>
                             <div class="ti ti-user-circle" style="font-size: 3rem;"></div>
                             <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -176,10 +176,20 @@
             {{-- Sidebar --}}
             <div
                 style="width: 240px; padding: 8rem 1rem; color: #ffffff; background-color: #550000; display: flex; flex-direction: column; gap: 2.25rem;">
-                <div style="border-bottom: 2px solid #fff;">
-                    <p
+                <div style="border-bottom: 2px solid #fff;" class="mb-3">
+                    <a href="{{ route('admin.admin.verif-reservation') }}">
+                        <p
                         style="font-weight: 600; font-size: 1.25rem; text-align: center; margin-bottom: 0.1rem !important; ">
                         Verifikasi Pesanan</p>
+                    </a>
+                </div>
+
+                <div style="border-bottom: 2px solid #fff;">
+                    <a href="{{ route('admin.room.index') }}">
+                        <p
+                        style="font-weight: 600; font-size: 1.25rem; text-align: center; margin-bottom: 0.1rem !important; ">
+                        Room</p>
+                    </a>
                 </div>
                 {{-- <div style="border-bottom: 2px solid #fff;">
                     <p style="font-weight: 600; font-size: 1.25rem; text-align: center; margin-bottom: 0.1rem !important; ">
@@ -192,7 +202,7 @@
 
                 <p style="font-weight: 800; font-size: 2.25rem;">{{ $title }}</p>
 
-                <div class="d-flex justify-content-between mb-3">
+                <div class="mb-3 d-flex justify-content-between">
                     <h1>{{ $title }}</h1>
                     <a href="{{ route($routePrefix . 'create') }}" class="btn btn-success">Tambah Ruangan</a>
                 </div>

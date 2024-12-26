@@ -199,11 +199,20 @@
     <div class="bg-full">
         <div class="content">
             <p style="font-weight: bold; font-size: 40px; text-shadow: 4px 6px 1px rgba(0, 0, 0, 0.5);">Selamat Datang <br> di UNISHARE</p>
+            @guest
             <a href="{{ route('login') }}">
                 <button style="background-color: #7E2F2F; padding: 18px 56px 18px 56px; border-radius: 10px;">
                     <p style="font-weight: bold; font-size: 40px; color: #fff; margin: 0">Mulai Peminjaman</p>
                 </button>
             </a>
+            @endguest
+            @auth
+            <a href="{{ route('landing') }}">
+                <button style="background-color: #7E2F2F; padding: 18px 56px 18px 56px; border-radius: 10px;">
+                    <p style="font-weight: bold; font-size: 40px; color: #fff; margin: 0">Mulai Peminjaman</p>
+                </button>
+            </a>
+            @endauth
         </div>
     </div>
 </x-app-layout>

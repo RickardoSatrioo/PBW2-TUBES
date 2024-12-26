@@ -115,7 +115,7 @@
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, Tolak!',
+                confirmButtonText: 'Ya, Menyetujui!',
             }).then((result) => {
                 // If the user confirms, submit the form
                 if (result.isConfirmed) {

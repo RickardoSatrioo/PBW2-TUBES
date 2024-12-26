@@ -28,7 +28,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        if (auth()->user()->role == 'admin') {
+        if (auth()->user()->hasRole('admin')) {
             return redirect()->route('admin.admin.verif-reservation')->with('success', "Login succesfully");
         }
 

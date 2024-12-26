@@ -5,7 +5,7 @@
         : 'assets/img/background.png';
 @endphp
 
-<a href="{{ route('user.room', $room->id) }}">
+<a href="{{ route('user.room', $room->id) }}" style="text-decoration: none; color: inherit;">
     <div style="min-width: 300px; background: white; border-radius: 0.4rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: transform 0.3s ease;">
         <img
             src="{{ asset($imagePath) }}"

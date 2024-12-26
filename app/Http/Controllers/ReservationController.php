@@ -38,11 +38,24 @@ class ReservationController extends Controller
                                 ->where('endDate', '>=', $request->endDateTime);
                         });
                 })
-                ->exists();
+                ->first();
 
-            if ($existingReservation) {
-                return redirect()->back()->with('error', 'Waktu yang dipilih sudah dipesan. Silakan pilih waktu lain.');
-            }
+                if ($existingReservation) {
+                    DB::rollBack();
+
+                    // Ambil informasi waktu yang bertabrakan
+                    $startDate = $existingReservation->startDate;
+                    $endDate = $existingReservation->endDate;
+
+                    // Format waktu untuk tampil lebih baik
+                    $date = \Carbon\Carbon::parse($startDate)->format('d M Y');
+                    $formattedStartDate = \Carbon\Carbon::parse($startDate)->format('H:i');
+                    $formattedEndDate = \Carbon\Carbon::parse($endDate)->format('H:i');
+
+                    session()->flash('openModal', true);
+                    return redirect()->back()->withInput()->with('error', "Waktu yang dipilih sudah dipesan pada tanggal $date dari pukul $formattedStartDate hingga $formattedEndDate. Silakan pilih waktu lain.");
+                }
+
 
             // Hitung durasi dalam jam
             $duration = \Carbon\Carbon::parse($request->startDateTime)->diffInHours(\Carbon\Carbon::parse($request->endDateTime));
@@ -82,6 +95,24 @@ class ReservationController extends Controller
         return DataTables::of($reservations)
             ->addColumn('reservation_details', function ($reservation) {
                 return view('admin.reservation-list', compact('reservation'));
+            })
+            ->make(true);
+    }
+
+    public function getListUser(Request $request)
+    {
+        // Get the status from query string (defaults to 'pending')
+        $status = $request->query('status', 'pending');
+
+        // Retrieve reservations based on status
+        $reservations = Reservation::with(['room', 'createdBy', 'approvedBy'])
+            ->where('status', $status)
+            ->where('created_by', auth()->user()->id)
+            ->get();
+
+        return DataTables::of($reservations)
+            ->addColumn('reservation_details', function ($reservation) {
+                return view('history-list', compact('reservation'));
             })
             ->make(true);
     }
@@ -135,6 +166,29 @@ class ReservationController extends Controller
     }
 
 
+    public function updateStatusUser(Request $request, Reservation $reservation)
+    {
+        DB::beginTransaction();
+        try {
+
+            if($request->status != 'canceled') {
+                DB::rollBack();
+                return redirect()->route('user.history_reservation')->with('error', "Gagal Memperbarui Status Reservasi!");
+            }
+
+            $data = [
+                'status' => $request->status,
+            ];
+
+            $reservation->update($data);
+            DB::commit();
+            return redirect()->route('user.history_reservation')->with('success', "Berhasil Memperbarui Status Reservasi!");
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->route('user.history_reservation')->with('error', "Gagal Memperbarui Status Reservasi!");
+        }
+    }
+
     public function updateStatus(Request $request, Reservation $reservation)
     {
         DB::beginTransaction();
@@ -144,6 +198,7 @@ class ReservationController extends Controller
                 'status' => $request->status,
                 'approved_by' => auth()->user()->id,
             ];
+
             if ($request->reason) {
                 $data['reason_reject'] = $request->reason;
             }

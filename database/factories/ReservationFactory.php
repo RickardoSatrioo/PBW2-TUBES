@@ -22,16 +22,16 @@ class ReservationFactory extends Factory
         $endDate = (clone $startDate)->modify('+3 hours'); // Example duration: 3 hours
 
         return [
-            'id_room' => Room::factory(),
-            'created_by' => User::factory(),
-            'approved_by' => User::factory(),
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-            'purpose' => $this->faker->sentence(),
-            'file_proposal' => $this->faker->word() . '.pdf',
-            'reason_reject' => $this->faker->optional()->sentence(),
-            'duration' => '3 Hours',
-            'status' => $this->faker->randomElement(['pending', 'approved', 'rejected']),
+            // 'id_room' => Room::factory(),
+            // 'created_by' => User::factory(),
+            // 'approved_by' => User::factory(),
+            // 'startDate' => $startDate,
+            // 'endDate' => $endDate,
+            // 'purpose' => $this->faker->sentence(),
+            // 'file_proposal' => $this->faker->word() . '.pdf',
+            // 'reason_reject' => $this->faker->optional()->sentence(),
+            // 'duration' => '3 Hours',
+            // 'status' => $this->faker->randomElement(['pending', 'approved', 'rejected']),
         ];
     }
 }

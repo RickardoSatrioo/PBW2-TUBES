@@ -6,6 +6,7 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserController;
 use App\Models\Reservation;
 use App\Models\Room;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -47,9 +48,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/reservation', function () {
             return view('history-reservation');
         })->name('history_reservation');
-        Route::get('/list_room', function () {
-            return view('listRoom');
+        Route::get('/list_room', function (Request $request) {
+            $search = $request->search ?? "";
+            return view('listRoom', compact('search'));
         })->name('list_room');
+        Route::post('/make-reservation', [ReservationController::class, 'makeReservation'])->name('make_reservation');
+        Route::get('/update-status/{reservation}', [ReservationController::class, 'updateStatusUser'])->name('reservations.update_status');
+        Route::get('/get-list', [ReservationController::class, 'getListUser'])->name('reservations.get_list');
         Route::get('/search-room', [RoomController::class, 'search'])->name('room.search');
     });
 
@@ -61,11 +66,10 @@ Route::middleware('auth')->group(function () {
     // });
 });
 
-Route::prefix('admin')->name('admin.')->group(function() {
+Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function() {
     Route::get('/verif-reservation', function () {
         return view('room');
     })->name('admin.verif-reservation');
-    Route::post('/make-reservation', [ReservationController::class, 'makeReservation'])->name('make_reservation');
     Route::get('/verif-reservation', [ReservationController::class, 'index'])->name('admin.verif-reservation');
     Route::get('/get-list', [ReservationController::class, 'getList'])->name('reservations.get_list');
     Route::get('/update-status/{reservation}', [ReservationController::class, 'updateStatus'])->name('reservations.update_status');

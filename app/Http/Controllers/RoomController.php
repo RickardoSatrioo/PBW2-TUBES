@@ -126,7 +126,6 @@ class RoomController extends Controller
             ];
             return view($this->routePrefix . $this->viewEdit, $data);
         } catch (Exception $e) {
-            dd($e);
             return redirect()->route($this->routePrefix . $this->viewIndex)->with('error', "Gagal Menemukan Ruangan!");;
         }
     }
@@ -179,7 +178,7 @@ class RoomController extends Controller
 
             // Start building the query with eager loading of the 'building' relationship
             $roomsQuery = Room::with('building')
-                ->leftJoin('building', 'room.id_building', '=', 'building.id')// Explicitly join the building table
+                ->leftJoin('building', 'room.id_building', '=', 'building.id') // Explicitly join the building table
                 ->select('room.*', 'building.name as building_name');
 
             // Apply search conditions if the query is not empty

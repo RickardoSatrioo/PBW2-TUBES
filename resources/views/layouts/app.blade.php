@@ -15,6 +15,8 @@
     {{-- Alpine js --}}
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
@@ -23,6 +25,7 @@
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
     {{-- Toaster js --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+
     <style>
         body {
             margin: 0;
@@ -62,19 +65,17 @@
     @stack('js')
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            @if (session('success'))
-                toastr.success("{{ session('success') }}");
-            @endif
+        @if (session('success'))
+            toastr.success("{{ session('success') }}");
+        @endif
 
-            @if (session('error'))
-                toastr.error("{{ session('error') }}");
-            @endif
+        @if (session('error'))
+            toastr.error("{{ session('error') }}");
+        @endif
 
-            @if (session('error2'))
-                toastr.error("{{ session('error2') }}");
-            @endif
-        });
+        @if (session('error2'))
+            toastr.error("{{ session('error2') }}");
+        @endif
     </script>
 </body>
 

@@ -50,7 +50,7 @@
             </div>
 
             {{-- Main Content --}}
-            <div x-data="{ openTab: 1 }" style="flex-grow: 1; padding: 8rem 3rem 0 2rem; background-color: #ffffff;">
+            <div x-data="{ openTab: 1 }" style="flex-grow: 1; padding: 8rem 3rem 0 2rem; background-color: #ffffff;height: 100vh;overflow-y:scroll">
 
                 <div class="mb-3 d-flex justify-content-between">
                     <h1>{{ $title }}</h1>
@@ -92,6 +92,41 @@
                         @enderror
                     </div>
 
+                    <div class="mb-3 form-group">
+                        <label for="password">Password</label>
+                        <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
+                            {{ $method === 'POST' ? 'required' : '' }}>
+                        @error('password')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                    <div class="mb-3 form-grou">
+                        <label for="password_confirmation">Konfirmasi Password</label>
+                        <input type="password" name="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror"
+                            {{ $method === 'POST' ? 'required' : '' }}>
+                        @error('password_confirmation')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="role" class="form-label">Role</label>
+                        <select name="role" id="role" class="form-control">
+                            @foreach(\Spatie\Permission\Models\Role::all() as $role)
+                                <option value="{{ $role->name }}" {{ old('role', $model->roles->first()->name ?? '') === $role->name ? 'selected' : '' }}>
+                                    {{ ucfirst($role->name) }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('role')
+                            <div class="rounded invalid-feedback d-block ps-2" style="background: white; text-align: left">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     <div class="mb-3">
                         <label for="about" class="form-label">Tentang Pengguna</label>
                         <textarea id="about" name="about" class="form-control" rows="3">{{ old('about', $model->about ?? '') }}</textarea>
@@ -122,7 +157,7 @@
                         @enderror
                     </div>
 
-                    <div class="mb-3">
+                    {{-- <div class="mb-3">
                         <label for="avatar" class="form-label">Foto Profil</label>
                         <input type="file" id="avatar" name="avatar" class="form-control">
                         @if(isset($model) && $model->avatar)
@@ -133,7 +168,7 @@
                             {{ $message }}
                         </div>
                         @enderror
-                    </div>
+                    </div> --}}
 
                     <div class="mb-3">
                         <label for="birthDate" class="form-label">Tanggal Lahir</label>

@@ -177,9 +177,21 @@
             <div
                 style="width: 240px; padding: 8rem 1rem; color: #ffffff; background-color: #550000; display: flex; flex-direction: column; gap: 2.25rem;">
                 <div style="border-bottom: 2px solid #fff;">
-                    <p
-                        style="font-weight: 600; font-size: 1.25rem; text-align: center; margin-bottom: 0.1rem !important; ">
-                        Verifikasi Pesanan</p>
+                    <div style="border-bottom: 2px solid #fff;" class="mb-3">
+                        <a href="{{ route('admin.admin.verif-reservation') }}">
+                            <p
+                            style="font-weight: 600; font-size: 1.25rem; text-align: center; margin-bottom: 0.1rem !important; ">
+                            Verifikasi Pesanan</p>
+                        </a>
+                    </div>
+
+                    <div style="border-bottom: 2px solid #fff;">
+                        <a href="{{ route('admin.room.index') }}">
+                            <p
+                            style="font-weight: 600; font-size: 1.25rem; text-align: center; margin-bottom: 0.1rem !important; ">
+                            Room</p>
+                        </a>
+                    </div>
                 </div>
                 {{-- <div style="border-bottom: 2px solid #fff;">
                     <p style="font-weight: 600; font-size: 1.25rem; text-align: center; margin-bottom: 0.1rem !important; ">

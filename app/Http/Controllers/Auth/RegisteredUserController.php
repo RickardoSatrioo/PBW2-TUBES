@@ -9,6 +9,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
@@ -37,6 +38,7 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        DB::beginTransaction();
         try {
             $user = User::create([
                 'name' => $request->name,
@@ -50,9 +52,14 @@ class RegisteredUserController extends Controller
             $user->assignRole("user");
 
             Auth::login($user);
+            DB::commit();
+            if (auth()->user()->hasRole('admin')) {
+                return redirect()->route('admin.admin.verif-reservation')->with('success', "Registrasi Akun Berhasil");
+            }
 
-            return redirect(route('dashboard', absolute: false))->with('success', "Registrasi Akun Berhasil");;
+            return redirect()->route('landing')->with('success', "Registrasi Akun Berhasil");;
         } catch(Exception $e) {
+            DB::rollBack();
             return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
     }

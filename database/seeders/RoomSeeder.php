@@ -14,9 +14,9 @@ class RoomSeeder extends Seeder
      */
     public function run(): void
     {
-        Building::factory()
-            ->count(5)
-            ->has(Room::factory()->count(10), 'rooms') // Ensure `rooms` relation exists in Building model
-            ->create();
+        // Building::factory()
+        //     ->count(5)
+        //     ->has(Room::factory()->count(10), 'rooms') // Ensure `rooms` relation exists in Building model
+        //     ->create();
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Requests\UserStoreRequest;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -40,6 +41,7 @@ class UserController extends Controller
                 'model' => new User(),
                 'method' => 'POST',
                 'route' => route($this->routePrefix . 'store'),
+                'roles' => \Spatie\Permission\Models\Role::all(),
                 'button' => 'CREATE',
                 'title' => 'FORM DATA CREATE USER',
             ];
@@ -52,7 +54,7 @@ class UserController extends Controller
     /**
      * Store a newly created user in storage.
      */
-    public function store(StoreUserRequest $request)
+    public function store(UserStoreRequest $request)
     {
         DB::beginTransaction();
         try {
@@ -67,11 +69,16 @@ class UserController extends Controller
             }
 
             // Create the user
-            User::create($data);
+            $user = User::create($data);
+
+            if ($request->role && $user->roles->first()->name !== $request->role) {
+                $user->syncRoles([$request->role]);
+            }
             DB::commit();
 
             return redirect()->route($this->routePrefix . $this->viewIndex)->with('success', "Berhasil Membuat User!");
         } catch (Exception $e) {
+            dd($e);
             DB::rollBack();
             return redirect()->route($this->routePrefix . $this->viewIndex)->with('error', "Gagal Membuat User!");
         }
@@ -102,6 +109,7 @@ class UserController extends Controller
             $data = [
                 'model' => $user,
                 'method' => 'PUT',
+                'roles' => \Spatie\Permission\Models\Role::all(),
                 'route' => route($this->routePrefix . 'update', $user->id),
                 'button' => 'UPDATE',
                 'title' => 'FORM DATA EDIT USER',
@@ -136,6 +144,10 @@ class UserController extends Controller
                     Storage::delete($user->avatar);
                 }
                 $data['avatar'] = $request->file('avatar')->store('avatars');
+            }
+
+            if ($request->role && $user->roles->first()->name !== $request->role) {
+                $user->syncRoles([$request->role]);
             }
 
             // Update the user

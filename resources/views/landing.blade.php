@@ -7,7 +7,25 @@
 
             {{-- Left Side --}}
             <div>
-                <h1 style="margin: 0; font-size: 2.5rem; font-weight: 700;">UniShare</h1>
+                <a href="{{ route('landing') }}" style="text-decoration: none; color: inherit;">
+                    <h1 style="margin: 0; font-size: 2.5rem; font-weight: 700;">UniShare</h1>
+                </a>
+            </div>
+
+            <div
+                style="flex-grow: 1; display: flex; padding: 1rem; justify-content: space-between; align-items: center;">
+                <div
+                    style="background-color: #F7F8FA; border-radius: 5rem; display: flex; gap: 1rem; padding: 0.5rem 1rem;">
+
+                </div>
+                <div style="display: flex; gap: 4rem;">
+                    <a href="{{ route('user.history_reservation') }}">
+                        <button
+                            style="text-align: center; border: none; background-color: transparent; font-weight: 600; color: #484848;">
+                            Riwayat
+                        </button>
+                    </a>
+                </div>
             </div>
 
             {{-- Center Side --}}
@@ -33,10 +51,28 @@
 
             {{-- Right Side --}}
             <div style="display: flex; gap: 1rem; align-items: center;">
-                <button class="ti ti-user-circle"
-                    style="font-size: 2rem; border: none; background-color: transparent;"></button>
-                <button class="ti ti-menu-3"
-                    style="font-size: 2rem; border: none; background-color: transparent;"></button>
+                <a href="{{ route('profile.edit') }}">
+                    <button class="ti ti-user-circle"
+                        style="font-size: 2rem; border: none; background-color: transparent;"></button>
+                </a>
+                @auth
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+
+                        <x-dropdown-link :href="route('logout')"
+                            onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                            <button class="ti ti-logout"
+                                style="font-size: 2rem; border: none; background-color: transparent;"></button>
+                        </x-dropdown-link>
+                    </form>
+                @endauth
+                @guest
+                    <a href="{{ route('login') }}">
+                        <button class="ti ti-login"
+                            style="font-size: 2rem; border: none; background-color: transparent;"></button>
+                    </a>
+                @endguest
             </div>
 
         </div>
@@ -86,13 +122,13 @@
                 <!-- Search Bar -->
                 <div
                     style="position: absolute; top: 42%; left: 50%; transform: translate(-50%, -50%); width: 60%; max-width: 800px;">
-                    <div
+                    <form action="{{ route('user.list_room') }}" method="GET"
                         style="background: rgba(255, 255, 255, 0.95); border-radius: 50px; padding: 15px 30px; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-                        <input type="text" placeholder="Cari ruangan yang Anda butuhkan..."
+                        <input type="text" placeholder="Cari ruangan yang Anda butuhkan..." name="search"
                             style="width: 100%; padding: 12px; border: none; outline: none; font-size: 1.1rem; background: transparent;">
                         <button class="ti ti-search"
                             style="border: none; padding: 0.8rem; font-size: 1.5rem; border-radius: 50%; background-color: #820000; color: #fff; cursor: pointer; transition: background-color 0.3s ease; min-width: 50px;"></button>
-                    </div>
+                    </form>
                 </div>
             </div>
             {{-- <div style="width: 100%; height: 100vh; background-image: url('{{ asset('assets/img/background.png') }}'); background-size: cover; background-position: center; background-repeat: no-repeat; position: relative;">
@@ -128,19 +164,19 @@
                                     ? 'storage/' . $room->image
                                     : 'assets/img/background.png';
                         @endphp
-                        <a href="{{ route('user.room', $room->id) }}">
+                        <a href="{{ route('user.room', $room->id) }}" style="text-decoration: none; color: inherit;">
                             <div
-                            style="min-width: 300px; background: white; border-radius: 0.4rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: transform 0.3s ease;">
-                            <img src="{{ asset($imagePath) }}" alt="Venue 1"
-                                style="width: 100%; height: 200px; object-fit: cover; border-radius: 0.4rem 0.4rem 0 0;">
-                            <div style="padding: 20px;">
-                                <h3
-                                    style="margin: 0 0 10px 0; color: #333; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">
-                                    {{ $room->building->name }} • {{ $room->name }}
-                                </h3>
-                                <p style="margin: 0; color: #666;">Capacity: {{ $room->capacity }} people</p>
+                                style="min-width: 300px; background: white; border-radius: 0.4rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: transform 0.3s ease;">
+                                <img src="{{ asset($imagePath) }}" alt="Venue 1"
+                                    style="width: 100%; height: 200px; object-fit: cover; border-radius: 0.4rem 0.4rem 0 0;">
+                                <div style="padding: 20px;">
+                                    <h3
+                                        style="margin: 0 0 10px 0; color: #333; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">
+                                        {{ $room->building->name }} • {{ $room->name }}
+                                    </h3>
+                                    <p style="margin: 0; color: #666;">Capacity: {{ $room->capacity }} people</p>
+                                </div>
                             </div>
-                        </div>
                         </a>
                     @empty
                         <h1>Ruangan masih kosong</h1>

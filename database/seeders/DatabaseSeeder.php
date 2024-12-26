@@ -22,7 +22,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             BuildingSeeder::class,
-            ReservationSeeder::class,
+            // ReservationSeeder::class,
+            RoleSeeder::class
         ]);
     }
 }

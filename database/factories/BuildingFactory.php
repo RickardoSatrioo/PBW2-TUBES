@@ -17,9 +17,9 @@ class BuildingFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->company . ' Building',
-            'description' => $this->faker->sentence(),
-            'status' => $this->faker->boolean(80), // 80% chance of being active
+            // 'name' => $this->faker->company . ' Building',
+            // 'description' => $this->faker->sentence(),
+            // 'status' => $this->faker->boolean(80), // 80% chance of being active
         ];
     }
 }
