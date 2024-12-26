@@ -36,7 +36,8 @@ class ReservationController extends Controller
                         ->orWhere(function ($query) use ($request) {
                             $query->where('startDate', '<=', $request->startDateTime)
                                 ->where('endDate', '>=', $request->endDateTime);
-                        });
+                        })
+                        ->where('status', '=', 'pending');
                 })
                 ->first();
 
@@ -87,9 +88,14 @@ class ReservationController extends Controller
         // Get the status from query string (defaults to 'pending')
         $status = $request->query('status', 'pending');
 
+        $filter = [$status];
+
+        if($status == "approved") {
+            $filter[] = "rejected";
+        }
         // Retrieve reservations based on status
         $reservations = Reservation::with(['room', 'createdBy', 'approvedBy'])
-            ->where('status', $status)
+            ->whereIn('status', $filter)
             ->get();
 
         return DataTables::of($reservations)
@@ -104,9 +110,14 @@ class ReservationController extends Controller
         // Get the status from query string (defaults to 'pending')
         $status = $request->query('status', 'pending');
 
+        $filter = [$status];
+
+        if($status == "approved") {
+            $filter[] = "rejected";
+        }
         // Retrieve reservations based on status
         $reservations = Reservation::with(['room', 'createdBy', 'approvedBy'])
-            ->where('status', $status)
+            ->whereIn('status', $filter)
             ->where('created_by', auth()->user()->id)
             ->get();
 
@@ -171,13 +182,14 @@ class ReservationController extends Controller
         DB::beginTransaction();
         try {
 
-            if($request->status != 'canceled') {
+            if($request->status != 'rejected') {
                 DB::rollBack();
                 return redirect()->route('user.history_reservation')->with('error', "Gagal Memperbarui Status Reservasi!");
             }
 
             $data = [
                 'status' => $request->status,
+                'reason_reject' => "Dibatalkan oleh pengguna",
             ];
 
             $reservation->update($data);

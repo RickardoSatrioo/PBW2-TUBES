@@ -160,7 +160,7 @@
                     @forelse ($rooms as $room)
                         @php
                             $imagePath =
-                                $room->image && \Storage::exists('public/' . $room->image)
+                                $room->image && \Storage::exists($room->image)
                                     ? 'storage/' . $room->image
                                     : 'assets/img/background.png';
                         @endphp

@@ -141,7 +141,7 @@
         <div
             style="min-height: 100vh; width: 100%; font-family: Arial, sans-serif; padding-top: 5rem; background: #f8f9fa;">
             <!-- Room Cards Grid -->
-            <div style="padding: 0 110px;min-height: 100vh;">
+            <div style="padding: 0 110px;min-height: 100vh;margin-top: 1rem">
                 <div id="room-container"
                     style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5rem; padding: 10px; max-height: 55.6rem; overflow-y: auto;padding-bottom: 200px;">
                     <!-- Sentinel Element for Infinite Scroll -->

@@ -1,6 +1,6 @@
 @php
     // Check if the image exists in storage or use the default background
-    $imagePath = $room->image && \Storage::exists('public/' . $room->image)
+    $imagePath = $room->image && \Storage::exists($room->image)
         ? 'storage/' . $room->image
         : 'assets/img/background.png';
 @endphp

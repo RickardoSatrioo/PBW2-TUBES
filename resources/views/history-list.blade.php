@@ -1,7 +1,14 @@
+@php
+    // Check if the image exists in storage or use the default background
+    $imagePath =
+        $reservation->room->image && \Storage::exists($reservation->room->image)
+            ? 'storage/' . $reservation->room->image
+            : 'assets/img/bg-telu2.png';
+@endphp
 <div class="mb-4 row">
     <div class="col-2">
         <div style="width: 10rem; height: 10rem; background-color: #484848; border-radius: 0.8rem; overflow: hidden;">
-            <img src="{{ asset('assets/img/bg-telu2.png') }}" alt=""
+            <img src="{{ asset($imagePath) }}" alt="{{ $reservation->room->name }}"
                 style="width: 100%; height: 100%; object-fit: cover;">
         </div>
     </div>
@@ -19,6 +26,9 @@
                 <h6><b>Durasi:</b> {{ $reservation->duration }}</h6>
                 <h6><b>Kapasitas:</b> {{ $reservation->room->capacity }} Orang</h6>
                 <h6><b>Alasan:</b> {{ $reservation->purpose ?? '' }}</h6>
+                @if ($reservation->status == 'rejected')
+                    <h6><b>Alasan Ditolak:</b> {{ $reservation->reason_reject ?? '' }}</h6>
+                @endif
             </div>
         </div>
     </div>
@@ -26,7 +36,8 @@
     <!-- Bagian Proposal -->
     <div class="text-center col-2 d-flex justify-content-center align-content-center" style="flex-direction: column">
         <h5 class="mb-3" style="color: #5D6065;"><b>Proposal</b></h5>
-        <a href="{{ asset('storage/' . $reservation->file_proposal) }}" class="text-decoration-none" style="color: #73C2FF;" target="_blank">
+        <a href="{{ asset('storage/' . $reservation->file_proposal) }}" class="text-decoration-none"
+            style="color: #73C2FF;" target="_blank">
             proposal.pdf
         </a>
     </div>
@@ -45,6 +56,16 @@
                 style="background-color: #4AD300;">
                 <span class="ti ti-circle-check-filled" style="font-size: 1.8rem;"></span> Verifikasi Disetujui
             </h5>
+        @elseif ($reservation->status == 'rejected')
+            <h5 class="gap-2 p-2 text-white rounded d-flex align-items-center justify-content-center"
+                style="background-color: red;">
+                <span class="ti ti-x" style="font-size: 1.8rem;"></span>
+                @if ($reservation->reason_reject == 'Dibatalkan oleh pengguna')
+                Reservasi dibatalkan
+                @else
+                Verifikasi Ditolak
+                @endif
+            </h5>
         @else
             <h5 class="gap-2 p-2 text-white rounded d-flex align-items-center justify-content-center"
                 style="background-color: #D37800;">
@@ -52,18 +73,21 @@
             </h5>
         @endif
     </div>
-    @if ($reservation->status == "pending")
-    <div class="text-center col-2">
-        <div style="padding-top: 2.8rem;">
-            <div style="display: flex; gap: 1rem;flex-direction: column" class="d-flex justify-content-center align-content-center">
-                <form class="cancel-form" style="display: flex; gap: 1rem;" action="{{ route('user.reservations.update_status', $reservation) }}" method="Get">
-                    <input type="hidden" name="status" value="canceled">
-                    <button class="cancel-button" style=" border: none; padding: 1rem; font-size: 1rem; border-radius: 5rem; background-color: #820000; color: #fff;">
-                        Batalkan Reservasi
-                    </button>
-                </form>
+    @if ($reservation->status == 'pending')
+        <div class="text-center col-2">
+            <div style="padding-top: 2.8rem;">
+                <div style="display: flex; gap: 1rem;flex-direction: column"
+                    class="d-flex justify-content-center align-content-center">
+                    <form class="cancel-form" style="display: flex; gap: 1rem;"
+                        action="{{ route('user.reservations.update_status', $reservation) }}" method="Get">
+                        <input type="hidden" name="status" value="rejected">
+                        <button class="cancel-button"
+                            style=" border: none; padding: 1rem; font-size: 1rem; border-radius: 5rem; background-color: #820000; color: #fff;">
+                            Batalkan Reservasi
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
     @endif
 </div>

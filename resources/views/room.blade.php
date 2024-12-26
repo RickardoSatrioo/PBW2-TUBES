@@ -87,7 +87,7 @@
                 <div style="width: 100%; min-height: 100%;">
                     @php
                         $imagePath =
-                            $room->image && \Storage::exists('public/' . $room->image)
+                            $room->image && \Storage::exists($room->image)
                                 ? 'storage/' . $room->image
                                 : 'assets/img/bg-telu2.png';
                     @endphp
@@ -206,7 +206,7 @@
                                 <div style="display: flex; gap: 1rem; align-items: center;">
                                     <div
                                         style="width: 7.5rem; height: 7.5rem; background-color: #484848; border-radius: 1rem; overflow: hidden;">
-                                        <img src="{{ asset('assets/img/bg-telu2.png') }}" alt=""
+                                        <img src="{{ asset($imagePath) }}" alt=""
                                             style="width: 100%; height: 100%; object-fit: cover;">
                                     </div>
                                     <div style="flex: 1; overflow: hidden;">
@@ -214,7 +214,7 @@
                                             style="font-size: 1.125rem; font-weight: bold; color: #333; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">
                                             {{ $room->name }} - {{ $room->building->name }}
                                         </h6>
-                                        <p style="margin: 0.5rem 0 0; font-size: 0.875rem; color: #666;">Kapasitas: 100
+                                        <p style="margin: 0.5rem 0 0; font-size: 0.875rem; color: #666;">Kapasitas: {{ $room->capacity }}
                                             Orang</p>
                                     </div>
                                 </div>
